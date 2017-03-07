@@ -84,7 +84,11 @@ static U8 BLUE[] = { 0x00, 0x00, 0x68, 0x68,
 static
 SDL_Surface *initScreen(U16 w, U16 h, U8 bpp, U32 flags)
 {
+#ifndef __LIBRETRO__
   return SDL_SetVideoMode(w, h, bpp, flags);
+#else
+  return SDL_CreateRGBSurface( flags,w, h,bpp , 0x00ff0000,0x0000ff00,0xff,0xff000000);
+#endif
 }
 
 void
@@ -97,13 +101,21 @@ sysvid_setPalette(img_color_t *pal, U16 n)
     palette[i].g = pal[i].g;
     palette[i].b = pal[i].b;
   }
+#ifndef __LIBRETRO__
   SDL_SetColors(screen, (SDL_Color *)&palette, 0, n);
+#else
+ SDL_SetPalette(screen,0, (SDL_Color *)&palette, 0, n);
+#endif
 }
 
 void
 sysvid_restorePalette()
 {
+#ifndef __LIBRETRO__
   SDL_SetColors(screen, (SDL_Color *)&palette, 0, 256);
+#else
+ SDL_SetPalette(screen,0, (SDL_Color *)&palette, 0, 256);
+#endif
 }
 
 void
@@ -126,6 +138,7 @@ sysvid_setGamePalette()
 void
 sysvid_chkvm(void)
 {
+#ifndef __LIBRETRO__
   SDL_Rect **modes;
   U8 i, mode = 0;
 
@@ -164,6 +177,7 @@ sysvid_chkvm(void)
       fszoom = 1;
     }
   }
+#endif
 }
 
 /*
@@ -181,7 +195,7 @@ sysvid_init(void)
   /* SDL */
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0)
     sys_panic("xrick/video: could not init SDL\n");
-
+#ifndef __LIBRETRO__
   /* various WM stuff */
   SDL_WM_SetCaption("xrick", "xrick");
   SDL_ShowCursor(SDL_DISABLE);
@@ -201,7 +215,7 @@ sysvid_init(void)
 
 	* old dirty stuff to implement transparency. SetColorKey does it
 	* on Windows w/out problems. Linux? FIXME!
-
+Palett
   len = IMG_ICON->w * IMG_ICON->h;
   mask = (U8 *)malloc(len/8);
   memset(mask, 0, len/8);
@@ -219,10 +233,14 @@ sysvid_init(void)
                     SDL_MapRGB(s->format,IMG_ICON->colors[tpix].r,IMG_ICON->colors[tpix].g,IMG_ICON->colors[tpix].b));
 
   SDL_WM_SetIcon(s, NULL);
-
+#endif
   /* video modes and screen */
   videoFlags = SDL_HWSURFACE|SDL_HWPALETTE;
+#ifndef __LIBRETRO__
   sysvid_chkvm();  /* check video modes */
+#else 
+fszoom = zoom =2;
+#endif
   if (sysarg_args_zoom)
     zoom = sysarg_args_zoom;
   if (sysarg_args_fullscreen) {
@@ -256,6 +274,18 @@ sysvid_shutdown(void)
   SDL_Quit();
 }
 
+#ifdef __LIBRETRO__
+extern SDL_Surface *sdlscrn; 
+#include "libco/libco.h"
+extern cothread_t mainThread;
+extern cothread_t emuThread;
+#define Retro_Flip(a) do{ co_switch(mainThread); }while(0);
+
+void blit(){
+SDL_BlitSurface(screen, NULL, sdlscrn, NULL);
+Retro_Flip(a);
+}
+#endif
 /*
  * Update screen
  * NOTE errors processing ?
@@ -321,6 +351,12 @@ sysvid_update(rect_t *rects)
   }
 
   SDL_UnlockSurface(screen);
+/*
+#ifdef __LIBRETRO__
+SDL_BlitSurface(screen, NULL, sdlscrn, NULL);
+Retro_Flip(a);
+#endif
+*/
 }
 
 

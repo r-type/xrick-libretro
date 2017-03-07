@@ -16,7 +16,7 @@
 #include <memory.h>
 
 #include "config.h"
-
+#ifndef __LIBRETRO__
 #ifdef ENABLE_SOUND
 
 #include "system.h"
@@ -428,6 +428,6 @@ sdlRWops_close(SDL_RWops *context)
 }
 
 #endif /* ENABLE_SOUND */
-
+#endif
 /* eof */
 

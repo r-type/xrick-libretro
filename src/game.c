@@ -240,6 +240,9 @@ game_run(void)
 
 		/* frame */
 		frame();
+#ifdef __LIBRETRO__
+blit();
+#endif
 	}
 
 	freedata(); /* free cached data */

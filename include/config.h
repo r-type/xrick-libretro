@@ -20,7 +20,7 @@
 /* graphics (choose one) */
 #define GFXST
 #undef GFXPC
-
+#ifndef __LIBRETRO__
 /* joystick support */
 #undef ENABLE_JOYSTICK
 
@@ -33,7 +33,7 @@
 /* auto-defocus support */
 /* does seem to cause all sorts of problems on BeOS, Windows... */
 #undef ENABLE_FOCUS
-
+#endif
 /* development tools */
 #undef ENABLE_DEVTOOLS
 #undef DEBUG /* see include/debug.h */

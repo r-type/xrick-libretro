@@ -31,8 +31,10 @@
 #define SETBIT(x,b) x |= (b)
 #define CLRBIT(x,b) x &= ~(b)
 
+char Key_Sate[512];
+#ifdef __LIBRETRO__
 static SDL_Event event;
-
+#endif
 /*
  * Process an event
  */
@@ -43,7 +45,7 @@ processEvent()
 #ifdef ENABLE_FOCUS
 	SDL_ActiveEvent *aevent;
 #endif
-
+#ifndef __LIBRETRO__
   switch (event.type) {
   case SDL_KEYDOWN:
     key = event.key.keysym.sym;
@@ -206,6 +208,11 @@ processEvent()
   default:
     break;
   }
+
+#else
+
+
+#endif
 }
 
 /*
@@ -214,8 +221,10 @@ processEvent()
 void
 sysevt_poll(void)
 {
+#ifndef __LIBRETRO__
   while (SDL_PollEvent(&event))
     processEvent();
+#endif
 }
 
 /*
@@ -224,8 +233,10 @@ sysevt_poll(void)
 void
 sysevt_wait(void)
 {
+#ifndef __LIBRETRO__
   SDL_WaitEvent(&event);
   processEvent();
+#endif
 }
 
 /* eof */

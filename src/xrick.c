@@ -20,7 +20,7 @@
  * main
  */
 int
-main(int argc, char *argv[])
+skel_main(int argc, char *argv[])
 {
 	sys_init(argc, argv);
 	if (sysarg_args_data)
