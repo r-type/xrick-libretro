@@ -13,17 +13,19 @@ else ifneq ($(findstring win,$(shell uname -a)),)
 endif
 endif
 
+TARGET_NAME := xrick
+
 ifeq ($(platform), android)
    CC = arm-linux-androideabi-gcc
    AR = @arm-linux-androideabi-ar
    LD = @arm-linux-androideabi-g++ 
-   TARGET := libretro-skelsdl.so
+   TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED :=  -Wl,--fix-cortex-a8 -llog -lz -shared -Wl,--version-script=$(LIBRETRO)/core/link.T -Wl,--no-undefined
    PLATFLAGS := -DAND -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
 else ifeq ($(platform), unix)
    CC = gcc
-   TARGET := libretro-skelsdl.so
+ TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED :=  -lz -lpthread -shared -Wl,--version-script=$(LIBRETRO)/core/link.T -Wl,--no-undefined
    PLATFLAGS := -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
@@ -65,7 +67,7 @@ else
    #CC = i586-mingw32msvc-gcc
    CC = x86_64-w64-mingw32-gcc
    PLATFLAGS :=  -D__LIBRETRO__ -DLSB_FIRST -DALIGN_DWORD -DWIN32PORT -DWIN32
-   TARGET := retro-skelsdl.dll
+   TARGET := $(TARGET_NAME)_libretro.dll
    SHARED := -shared -static-libgcc -s -Wl,--version-script=$(LIBRETRO)/core/link.T -Wl,--no-undefined 
 endif
 
