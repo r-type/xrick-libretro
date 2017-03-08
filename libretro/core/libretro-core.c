@@ -17,7 +17,6 @@ extern short signed int SNDBUF[1024*2];
 extern char RPATH[512];
 extern char RETRO_DIR[512];
 
-//#include "includes.h"
 SDL_Surface *sdlscrn; 
 
 void SDL_Uninit(void)
@@ -59,7 +58,7 @@ const char *retro_system_directory;
 const char *retro_content_directory;
 
 static retro_video_refresh_t video_cb;
-static retro_audio_sample_t audio_cb;
+/*static*/ retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 static retro_environment_t environ_cb;
 
@@ -74,6 +73,9 @@ void retro_set_environment(retro_environment_t cb)
       },
       { NULL, NULL },
    };
+
+   bool no_content = true;
+   cb(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &no_content);
 
    cb(RETRO_ENVIRONMENT_SET_VARIABLES, variables);
 }
@@ -106,7 +108,6 @@ retroh=WINDOW_HEIGHT;
       CROP_HEIGHT= (retroh-80);
       VIRTUAL_WIDTH = retrow;
       texture_init();
-      //reset_screen();
    }
 
 }
@@ -248,8 +249,8 @@ void retro_set_controller_port_device(unsigned port, unsigned device)
 void retro_get_system_info(struct retro_system_info *info)
 {
    memset(info, 0, sizeof(*info));
-   info->library_name     = "skelsdl";
-   info->library_version  = "0.1-Dev";
+   info->library_name     = "xrick";
+   info->library_version  = "021212-Dev";
    info->valid_extensions = "*|zip";
    info->need_fullpath    = true;
    info->block_extract = false;
@@ -259,7 +260,7 @@ void retro_get_system_info(struct retro_system_info *info)
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    struct retro_game_geometry geom = { retrow, retroh, 1024, 1024,4.0 / 3.0 };
-   struct retro_system_timing timing = { 50.0, 44100.0 };
+   struct retro_system_timing timing = { 50.0, 22050.0 };
 
    info->geometry = geom;
    info->timing   = timing;
@@ -294,8 +295,7 @@ void retro_run(void)
       Retro_PollEvent();
 
       if(SND==1){
-	 signed short int *p=(signed short int *)SNDBUF;
-         for(x=0;x<snd_sampler;x++)audio_cb(*p++,*p++);			
+		syssnd_callback(sndbuf,441*2);			
       }	
 
    }   
@@ -336,7 +336,7 @@ bool retro_load_game(const struct retro_game_info *info)
 */
    full_path = info->path;
 
-   strcpy(RPATH,full_path);
+   //strcpy(RPATH,full_path);
 
    update_variables();
 

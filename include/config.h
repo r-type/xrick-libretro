@@ -20,6 +20,9 @@
 /* graphics (choose one) */
 #define GFXST
 #undef GFXPC
+/* sound support */
+#define ENABLE_SOUND
+
 #ifndef __LIBRETRO__
 /* joystick support */
 #undef ENABLE_JOYSTICK

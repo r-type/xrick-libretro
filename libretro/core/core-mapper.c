@@ -39,7 +39,7 @@ unsigned long  Ktime=0 , LastFPSTime=0;
 
 //SOUND
 short signed int SNDBUF[1024*2];
-int snd_sampler = 44100 / 50;
+int snd_sampler = 22050 / 50;
 
 //PATH
 char RPATH[512];
