@@ -302,12 +302,10 @@ syssnd_load(char *name)
 	f = data_file_open(name);
 
 	data_file_read(f, &head, 1, WAV_HEADER_SIZE);
-	//fread(&head, 1, WAV_HEADER_SIZE, f);
 	s->buf=malloc(head.Subchunk2Size);
 	s->len=head.Subchunk2Size;
 
 	data_file_read(f, s->buf, 1, s->len);
-	//fread(s->buf, 1, s->len,f);
 	printf("sz snd:%d \n",s->len+WAV_HEADER_SIZE);
 	s->dispose = FALSE;
 

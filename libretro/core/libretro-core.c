@@ -259,7 +259,7 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-   struct retro_game_geometry geom = { retrow, retroh, 1024, 1024,4.0 / 3.0 };
+   struct retro_game_geometry geom = { retrow, retroh, retrow, retrow,4.0 / 3.0 };
    struct retro_system_timing timing = { 50.0, 22050.0 };
 
    info->geometry = geom;
@@ -295,7 +295,7 @@ void retro_run(void)
       Retro_PollEvent();
 
       if(SND==1){
-		syssnd_callback(sndbuf,441*2);			
+		syssnd_callback(NULL,441*2);			
       }	
 
    }   

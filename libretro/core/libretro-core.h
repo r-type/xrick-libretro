@@ -25,8 +25,8 @@
 	#define PIXEL_TYPE UINT32
 #endif 
 
-#define WINDOW_WIDTH 320*2
-#define WINDOW_HEIGHT 240*2
+#define WINDOW_WIDTH 320
+#define WINDOW_HEIGHT 240
 
 #include "libco/libco.h"
 

@@ -239,7 +239,7 @@ Palett
 #ifndef __LIBRETRO__
   sysvid_chkvm();  /* check video modes */
 #else 
-fszoom = zoom =2;
+fszoom = zoom =1;
 #endif
   if (sysarg_args_zoom)
     zoom = sysarg_args_zoom;
