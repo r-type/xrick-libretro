@@ -44,6 +44,10 @@ printf("free surf  \n");
       free(sdlscrn);
 }
 
+const char *retro_save_directory;
+const char *retro_system_directory;
+const char *retro_content_directory;
+
 #include "cmdline.c"
 
 extern void update_input(void);
@@ -52,10 +56,6 @@ extern void texture_uninit(void);
 extern void Emu_init();
 extern void Emu_uninit();
 extern void input_gui(void);
-
-const char *retro_save_directory;
-const char *retro_system_directory;
-const char *retro_content_directory;
 
 static retro_video_refresh_t video_cb;
 /*static*/ retro_audio_sample_t audio_cb;
@@ -114,7 +114,8 @@ retroh=WINDOW_HEIGHT;
 
 static void retro_wrap_emulator()
 {    
-SND=1;
+   SND=1;
+   sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0",retro_system_directory);
    pre_main(RPATH);
 
    pauseg=-1;
