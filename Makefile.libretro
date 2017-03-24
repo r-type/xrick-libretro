@@ -69,7 +69,7 @@ else
 endif
 
 CFLAGS += -fsigned-char  \
-	-Wno-strict-prototypes -ffast-math -fomit-frame-pointer -fno-strength-reduce  -fno-builtin -finline-functions -s
+	-Wno-strict-prototypes -ffast-math -fomit-frame-pointer -fno-builtin -s
 
 include $(CORE_DIR)/Makefile.common
 
