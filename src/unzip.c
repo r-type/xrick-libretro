@@ -562,10 +562,12 @@ local int unzlocal_GetCurrentFileInfoInternal (file,
 
 	/* we check the magic */
 	if (err==UNZ_OK)
-		if (unzlocal_getLong(s->file,&uMagic) != UNZ_OK)
-			err=UNZ_ERRNO;
-		else if (uMagic!=0x02014b50)
-			err=UNZ_BADZIPFILE;
+   {
+      if (unzlocal_getLong(s->file,&uMagic) != UNZ_OK)
+         err=UNZ_ERRNO;
+      else if (uMagic!=0x02014b50)
+         err=UNZ_BADZIPFILE;
+   }
 
 	if (unzlocal_getShort(s->file,&file_info.version) != UNZ_OK)
 		err=UNZ_ERRNO;
