@@ -32,9 +32,7 @@
 #define CLRBIT(x,b) x &= ~(b)
 
 char Key_Sate[512];
-#ifdef __LIBRETRO__
 static SDL_Event event;
-#endif
 /*
  * Process an event
  */
@@ -42,9 +40,6 @@ static void
 processEvent()
 {
 	U16 key;
-#ifdef ENABLE_FOCUS
-	SDL_ActiveEvent *aevent;
-#endif
 #ifndef __LIBRETRO__
   switch (event.type) {
   case SDL_KEYDOWN:
@@ -153,19 +148,6 @@ processEvent()
     SETBIT(control_status, CONTROL_EXIT);
     control_last = CONTROL_EXIT;
     break;
-#ifdef ENABLE_FOCUS
-  case SDL_ACTIVEEVENT: {
-    aevent = (SDL_ActiveEvent *)&event;
-    IFDEBUG_EVENTS(
-      printf("xrick/events: active %x %x\n", aevent->gain, aevent->state);
-      );
-    if (aevent->gain == 1)
-      control_active = TRUE;
-    else
-      control_active = FALSE;
-    }
-  break;
-#endif
 #ifdef ENABLE_JOYSTICK
   case SDL_JOYAXISMOTION:
     IFDEBUG_EVENTS(sys_printf("xrick/events: joystick\n"););
