@@ -11,18 +11,19 @@
 
 #include <stdbool.h>
 
+#define WINDOW_WIDTH  320
+#define WINDOW_HEIGHT 240
+
 #ifdef  RENDER16B
-extern uint16_t Retro_Screen[1600*1200];
+extern uint16_t Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #define PIXEL_BYTES 1
 #define PIXEL_TYPE uint16_t
 #else
-extern unsigned int Retro_Screen[1600*1200];
+extern unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #define PIXEL_BYTES 2
 #define PIXEL_TYPE uint32_t 
 #endif 
 
-#define WINDOW_WIDTH  320
-#define WINDOW_HEIGHT 240
 
 #include "libco/libco.h"
 

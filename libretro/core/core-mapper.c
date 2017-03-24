@@ -26,9 +26,9 @@ unsigned long  Ktime=0 , LastFPSTime=0;
 //extern SDL_Surface *sdlscrn; 
 
 #ifdef  RENDER16B
-uint16_t Retro_Screen[1600*1200];
+uint16_t Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #else
-unsigned int Retro_Screen[1600*1200];
+unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #endif 
 
 //SOUND

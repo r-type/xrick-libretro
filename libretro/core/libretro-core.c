@@ -5,8 +5,6 @@
 cothread_t mainThread;
 cothread_t emuThread;
 
-int CROP_WIDTH;
-int CROP_HEIGHT;
 int VIRTUAL_WIDTH ;
 int retrow=1024; 
 int retroh=1024;
@@ -92,12 +90,9 @@ static void update_variables(void)
 
       fprintf(stderr, "[libretro-test]: Got size: %u x %u.\n", retrow, retroh);
 
-      CROP_WIDTH =retrow;
-      CROP_HEIGHT= (retroh-80);
       VIRTUAL_WIDTH = retrow;
       texture_init();
    }
-
 }
 
 static void retro_wrap_emulator(void)
@@ -285,11 +280,11 @@ bool retro_load_game(const struct retro_game_info *info)
    update_variables();
 
 #ifdef RENDER16B
-   memset(Retro_Screen,0,1600*1200*2);
+   memset(Retro_Screen,0,WINDOW_WIDTH*WINDOW_HEIGHT*2);
    SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT, 16, 0);
    retrob=2;
 #else
-   memset(Retro_Screen,0,1600*1200*2*2);
+   memset(Retro_Screen,0,WINDOW_WIDTH*WINDOW_HEIGHT*2*2);
    sdlscrn = SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT ,32, 0);
    retrob=4;
 #endif
