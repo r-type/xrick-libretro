@@ -196,8 +196,6 @@ static void retro_key_up(unsigned short retrok)
 
 #include "sdl-wrapper.c"
 
-static int bitstart=0;
-static int keydown=0,keyup=0;
 int SurfaceFormat=3;
 
 int Retro_PollEvent(void)
@@ -205,8 +203,6 @@ int Retro_PollEvent(void)
    int i;
 
    input_poll_cb();
-
-   keydown=0;keyup=0;
 
    for(i=0;i<320;i++)
    {
@@ -216,17 +212,12 @@ int Retro_PollEvent(void)
       {
          retro_key_down(i);
          Key_Sate2[i]=1;
-         bitstart=1;
-         keydown++;
       }
       else if ( !Key_Sate[i] && Key_Sate2[i]==1 )
       {
          retro_key_up( i );
          Key_Sate2[i]=0;
-         bitstart=0;
-         keyup++;
       }
-
    }
 
    return 1;
