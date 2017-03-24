@@ -68,8 +68,7 @@ else ifeq ($(platform), ps3)
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD 
 
 else
-   #CC = i586-mingw32msvc-gcc
-   CC = x86_64-w64-mingw32-gcc
+	CC = gcc
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD -DWIN32PORT -DWIN32
    TARGET := $(TARGET_NAME)_libretro.dll
    SHARED := -shared -static-libgcc -s -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined 
