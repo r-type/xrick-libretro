@@ -3,12 +3,6 @@
 #include "sdl_primitives.h"
 
 #include "SDL.h"
-//CORE VAR
-#ifdef _WIN32
-char slash = '\\';
-#else
-char slash = '/';
-#endif
 extern const char *retro_save_directory;
 extern const char *retro_system_directory;
 extern const char *retro_content_directory;
