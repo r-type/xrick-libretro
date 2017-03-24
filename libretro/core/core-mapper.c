@@ -32,9 +32,9 @@ unsigned long  Ktime=0 , LastFPSTime=0;
 //extern SDL_Surface *sdlscrn; 
 
 #ifdef  RENDER16B
-	uint16_t Retro_Screen[1600*1200];
+uint16_t Retro_Screen[1600*1200];
 #else
-	unsigned int Retro_Screen[1600*1200];
+unsigned int Retro_Screen[1600*1200];
 #endif 
 
 //SOUND
@@ -57,10 +57,7 @@ unsigned char MXjoy[2]; // joy
 int NUMjoy=1;
 
 //MOUSE
-extern int pushi;  // gui mouse btn
-int gmx,gmy; //gui mouse
 int touch;
-int fmousex,fmousey; //gui mouse
 
 //KEYBOARD
 char Key_Sate[512];
@@ -132,15 +129,12 @@ void gui_poll_events(void)
 
 void texture_uninit(void)
 {
-	SDL_Uninit();
+   SDL_Uninit();
 }
 
 void texture_init(void)
 {
    memset(Retro_Screen, 0, sizeof(Retro_Screen));
-
-   gmx=(retrow/2)-1;
-   gmy=(retroh/2)-1;
 }
 
 #include "system.h"
@@ -151,79 +145,79 @@ void texture_init(void)
 void retro_key_down(unsigned short retrok)
 {
    //IKBD_PressSTKey(retrok,1); 
-unsigned short key=retrok;
+   unsigned short key=retrok;
 
- if (key == syskbd_up || key == SDLK_UP) {
+   if (key == syskbd_up || key == SDLK_UP) {
       SETBIT(control_status, CONTROL_UP);
       control_last = CONTROL_UP;
-    }
-    else if (key == syskbd_down || key == SDLK_DOWN) {
+   }
+   else if (key == syskbd_down || key == SDLK_DOWN) {
       SETBIT(control_status, CONTROL_DOWN);
       control_last = CONTROL_DOWN;
-    }
-    else if (key == syskbd_left || key == SDLK_LEFT) {
+   }
+   else if (key == syskbd_left || key == SDLK_LEFT) {
       SETBIT(control_status, CONTROL_LEFT);
       control_last = CONTROL_LEFT;
-    }
-    else if (key == syskbd_right || key == SDLK_RIGHT) {
+   }
+   else if (key == syskbd_right || key == SDLK_RIGHT) {
       SETBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
-    }
-    else if (key == syskbd_pause) {
+   }
+   else if (key == syskbd_pause) {
       SETBIT(control_status, CONTROL_PAUSE);
       control_last = CONTROL_PAUSE;
-    }
-    else if (key == syskbd_end) {
+   }
+   else if (key == syskbd_end) {
       SETBIT(control_status, CONTROL_END);
       control_last = CONTROL_END;
-    }
-    else if (key == syskbd_xtra) {
+   }
+   else if (key == syskbd_xtra) {
       SETBIT(control_status, CONTROL_EXIT);
       control_last = CONTROL_EXIT;
-    }
-    else if (key == syskbd_fire) {
+   }
+   else if (key == syskbd_fire) {
       SETBIT(control_status, CONTROL_FIRE);
       control_last = CONTROL_FIRE;
-    }
+   }
 }
 
 void retro_key_up(unsigned short retrok)
 {
-unsigned short key=retrok;
+   unsigned short key=retrok;
    //IKBD_PressSTKey(retrok,0);
- if (key == syskbd_up || key == SDLK_UP) {
+   if (key == syskbd_up || key == SDLK_UP) {
       CLRBIT(control_status, CONTROL_UP);
       control_last = CONTROL_UP;
-    }
-    else if (key == syskbd_down || key == SDLK_DOWN) {
+   }
+   else if (key == syskbd_down || key == SDLK_DOWN) {
       CLRBIT(control_status, CONTROL_DOWN);
       control_last = CONTROL_DOWN;
-    }
-    else if (key == syskbd_left || key == SDLK_LEFT) {
+   }
+   else if (key == syskbd_left || key == SDLK_LEFT) {
       CLRBIT(control_status, CONTROL_LEFT);
       control_last = CONTROL_LEFT;
-    }
-    else if (key == syskbd_right || key == SDLK_RIGHT) {
+   }
+   else if (key == syskbd_right || key == SDLK_RIGHT) {
       CLRBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
-    }
-    else if (key == syskbd_pause) {
+   }
+   else if (key == syskbd_pause) {
       CLRBIT(control_status, CONTROL_PAUSE);
       control_last = CONTROL_PAUSE;
-    }
-    else if (key == syskbd_end) {
+   }
+   else if (key == syskbd_end) {
       CLRBIT(control_status, CONTROL_END);
       control_last = CONTROL_END;
-    }
-    else if (key == syskbd_xtra) {
+   }
+   else if (key == syskbd_xtra) {
       CLRBIT(control_status, CONTROL_EXIT);
       control_last = CONTROL_EXIT;
-    }
-    else if (key  == syskbd_fire) {
+   }
+   else if (key  == syskbd_fire) {
       CLRBIT(control_status, CONTROL_FIRE);
       control_last = CONTROL_FIRE;
-    }
-    
+   }
+
 }
 
 #include "sdl-wrapper.c"
@@ -244,60 +238,60 @@ void Process_key(void)
    for(i=0;i<320;i++)
    {
       Key_Sate[i]=input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0,i) ? 0x80: 0;
-      
-         if(Key_Sate[i]  && Key_Sate2[i]==0)
-         {
+
+      if(Key_Sate[i]  && Key_Sate2[i]==0)
+      {
 #if 0
-if(i==308/*SDLK_RALT*/){
-	KBMOD=-KBMOD;
-	printf("Modifier pressed %d \n",KBMOD); 
-        Key_Sate2[i]=1;
-	
-	continue;
-}
-#endif
-  SDL_keysym keysym;
-
-  keysym.scancode=i;
-  keysym.sym=i;
-  keysym.unicode=0;
-  if(KBMOD==1)keysym.mod=0x0200;
-  else keysym.mod=0;
-
-//Keymap_KeyDown(&keysym);
-
-            retro_key_down(i);
+         if(i==308/*SDLK_RALT*/){
+            KBMOD=-KBMOD;
+            printf("Modifier pressed %d \n",KBMOD); 
             Key_Sate2[i]=1;
-bitstart=1;//
-keydown++;
+
+            continue;
          }
-         else if ( !Key_Sate[i] && Key_Sate2[i]==1 )
-         {
-#if 0
-if(i==308/*SDLK_RALT*/){
-	//KBMOD=-KBMOD;
-	//printf("Modifier pressed %d \n",KBMOD); 
-        Key_Sate2[i]=0;
-	
-	continue;
-}
 #endif
-  SDL_keysym keysym;
+         SDL_keysym keysym;
 
-  keysym.scancode=i;
-  keysym.sym=i;
-  keysym.unicode=0;
-  keysym.mod=0;
+         keysym.scancode=i;
+         keysym.sym=i;
+         keysym.unicode=0;
+         if(KBMOD==1)keysym.mod=0x0200;
+         else keysym.mod=0;
 
-//Keymap_KeyUp(&keysym);
+         //Keymap_KeyDown(&keysym);
 
-            retro_key_up( i );
+         retro_key_down(i);
+         Key_Sate2[i]=1;
+         bitstart=1;//
+         keydown++;
+      }
+      else if ( !Key_Sate[i] && Key_Sate2[i]==1 )
+      {
+#if 0
+         if(i==308/*SDLK_RALT*/){
+            //KBMOD=-KBMOD;
+            //printf("Modifier pressed %d \n",KBMOD); 
             Key_Sate2[i]=0;
-bitstart=0;
-keyup++;
 
+            continue;
          }
-      
+#endif
+         SDL_keysym keysym;
+
+         keysym.scancode=i;
+         keysym.sym=i;
+         keysym.unicode=0;
+         keysym.mod=0;
+
+         //Keymap_KeyUp(&keysym);
+
+         retro_key_up( i );
+         Key_Sate2[i]=0;
+         bitstart=0;
+         keyup++;
+
+      }
+
    }
 
 
@@ -306,92 +300,11 @@ keyup++;
 //#include "ikbd.h"
 int Retro_PollEvent(void)
 {
-   int SAVPAS=PAS;	
-
    input_poll_cb();
-
-   int mouse_l;
-   int mouse_r;
-   int16_t mouse_x,mouse_y;
-   mouse_x=mouse_y=0;
 
    Process_key();
 
-   //mouse/joy toggle
-   if ( input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, 2) && mbt[2]==0 )
-      mbt[2]=1;
-   else if ( mbt[2]==1 && ! input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, 2) ){
-      mbt[2]=0;
-      MOUSE_EMULATED=-MOUSE_EMULATED;
-   }
-
-   if(MOUSE_EMULATED==1){
-
-      //TODO FIX THIS :(
-#if defined(__CELLOS_LV2__) 
-      //Slow Joypad Mouse Emulation for PS3
-      static int pair=-1;
-      pair=-pair;
-      if(pair==1)return;
-      PAS=1;
-#elif defined(GEKKO) 
-      PAS=1;
-#endif
-
-      if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT))mouse_x += PAS;
-      if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT))mouse_x -= PAS;
-      if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN))mouse_y += PAS;
-      if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))mouse_y -= PAS;
-      mouse_l=input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
-      mouse_r=input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
-
-      PAS=SAVPAS;
-   }
-   else {
-
-      mouse_x = input_state_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_X);
-      mouse_y = input_state_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_Y);
-      mouse_l    = input_state_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT);
-      mouse_r    = input_state_cb(0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT);
-   }
-
-   static int mmbL=0,mmbR=0;
-
-   if(mmbL==0 && mouse_l){
-
-      mmbL=1;		
-      pushi=1;
-    // Keyboard.bLButtonDown |= BUTTON_MOUSE;
-   }
-   else if(mmbL==1 && !mouse_l) {
-
-      mmbL=0;
-      pushi=0;
-    //  Keyboard.bLButtonDown &= ~BUTTON_MOUSE;
-   }
-
-   if(mmbR==0 && mouse_r){
-      mmbR=1;
-     // Keyboard.bRButtonDown |= BUTTON_MOUSE;		
-   }
-   else if(mmbR==1 && !mouse_r) {
-      mmbR=0;
-     // Keyboard.bRButtonDown &= ~BUTTON_MOUSE;
-   }
-
-  fmousex=mouse_x;
-  fmousey=mouse_y;
- // Main_HandleMouseMotion();
-
-   gmx+=mouse_x;
-   gmy+=mouse_y;
-   if(gmx<0)gmx=0;
-   if(gmx>retrow-1)gmx=retrow-1;
-   if(gmy<0)gmy=0;
-   if(gmy>retroh-1)gmy=retroh-1;
-
-
-return 1;
+   return 1;
 
 }
 

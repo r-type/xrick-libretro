@@ -84,13 +84,6 @@ void Retro_Fillrect(SDL_Surface * surf,SDL_Rect *rect,unsigned int col)
 	else SDL_DrawFRect(surf,rect->x,rect->y,rect->w ,rect->h,col); 
 }
 
-int  GuiGetMouseState( int * x,int * y)
-{
-   *x=gmx;
-   *y=gmy;
-   return 0;
-}
-
 void Retro_FreeSurface(SDL_Surface *surf )
 {   
 
