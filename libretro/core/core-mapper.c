@@ -56,19 +56,9 @@ int ar[2][2];//right analog1
 unsigned char MXjoy[2]; // joy
 int NUMjoy=1;
 
-//MOUSE
-int touch;
-
 //KEYBOARD
 char Key_Sate[512];
 char Key_Sate2[512];
-
-static int mbt[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
-//STATS GUI
-//extern int LEDA,LEDB,LEDC;
-int BOXDEC= 32+2;
-int STAT_BASEY;
 
 static retro_input_state_t input_state_cb;
 static retro_input_poll_t input_poll_cb;
@@ -216,9 +206,11 @@ int keydown=0,keyup=0;
 int KBMOD=-1;
 int SurfaceFormat=3;
 
-void Process_key(void)
+int Retro_PollEvent(void)
 {
    int i;
+
+   input_poll_cb();
 
    keydown=0;keyup=0;
 
@@ -229,7 +221,8 @@ void Process_key(void)
       if(Key_Sate[i]  && Key_Sate2[i]==0)
       {
 #if 0
-         if(i==308/*SDLK_RALT*/){
+         if(i==308/*SDLK_RALT*/)
+         {
             KBMOD=-KBMOD;
             printf("Modifier pressed %d \n",KBMOD); 
             Key_Sate2[i]=1;
@@ -255,7 +248,8 @@ void Process_key(void)
       else if ( !Key_Sate[i] && Key_Sate2[i]==1 )
       {
 #if 0
-         if(i==308/*SDLK_RALT*/){
+         if(i==308/*SDLK_RALT*/)
+         {
             //KBMOD=-KBMOD;
             //printf("Modifier pressed %d \n",KBMOD); 
             Key_Sate2[i]=0;
@@ -280,16 +274,6 @@ void Process_key(void)
       }
 
    }
-
-
-
-}
-//#include "ikbd.h"
-int Retro_PollEvent(void)
-{
-   input_poll_cb();
-
-   Process_key();
 
    return 1;
 
