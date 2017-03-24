@@ -123,22 +123,22 @@ static void retro_key_down(unsigned short key)
       SETBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
    }
-   else if (key == syskbd_pause)
+   else if (key == SDLK_p)
    {
       SETBIT(control_status, CONTROL_PAUSE);
       control_last = CONTROL_PAUSE;
    }
-   else if (key == syskbd_end)
+   else if (key == SDLK_e)
    {
       SETBIT(control_status, CONTROL_END);
       control_last = CONTROL_END;
    }
-   else if (key == syskbd_xtra)
+   else if (key == SDLK_ESCAPE)
    {
       SETBIT(control_status, CONTROL_EXIT);
       control_last = CONTROL_EXIT;
    }
-   else if (key == syskbd_fire)
+   else if (key == SDLK_SPACE)
    {
       SETBIT(control_status, CONTROL_FIRE);
       control_last = CONTROL_FIRE;
@@ -167,22 +167,22 @@ static void retro_key_up(unsigned short key)
       CLRBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
    }
-   else if (key == syskbd_pause)
+   else if (key == SDLK_p)
    {
       CLRBIT(control_status, CONTROL_PAUSE);
       control_last = CONTROL_PAUSE;
    }
-   else if (key == syskbd_end)
+   else if (key == SDLK_e)
    {
       CLRBIT(control_status, CONTROL_END);
       control_last = CONTROL_END;
    }
-   else if (key == syskbd_xtra)
+   else if (key == SDLK_ESCAPE)
    {
       CLRBIT(control_status, CONTROL_EXIT);
       control_last = CONTROL_EXIT;
    }
-   else if (key  == syskbd_fire)
+   else if (key  == SDLK_SPACE)
    {
       CLRBIT(control_status, CONTROL_FIRE);
       control_last = CONTROL_FIRE;
