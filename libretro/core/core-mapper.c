@@ -19,12 +19,13 @@ char RETRO_DIR[512];
 #include <time.h>
 #endif
 
-long frame=0;
-unsigned long  Ktime=0 , LastFPSTime=0;
+#include "system.h"
+#include "control.h"
+
+#define SETBIT(x,b) x |= (b)
+#define CLRBIT(x,b) x &= ~(b)
 
 //VIDEO
-//extern SDL_Surface *sdlscrn; 
-
 #ifdef  RENDER16B
 uint16_t Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #else
@@ -32,7 +33,6 @@ unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #endif 
 
 //SOUND
-short signed int SNDBUF[1024*2];
 int snd_sampler = 22050 / 50;
 
 //PATH
@@ -46,8 +46,6 @@ static int firstps=0;
 //JOY
 int al[2][2];//left analog1
 int ar[2][2];//right analog1
-unsigned char MXjoy[2]; // joy
-int NUMjoy=1;
 
 //KEYBOARD
 char Key_Sate[512];
@@ -67,7 +65,8 @@ void retro_set_input_poll(retro_input_poll_t cb)
 }
 
 long GetTicks(void)
-{ // in MSec
+{
+   // in MSec
 #ifndef _ANDROID_
 
 #ifdef __CELLOS_LV2__
@@ -107,83 +106,93 @@ void texture_init(void)
    memset(Retro_Screen, 0, sizeof(Retro_Screen));
 }
 
-#include "system.h"
-#include "control.h"
-
-#define SETBIT(x,b) x |= (b)
-#define CLRBIT(x,b) x &= ~(b)
-void retro_key_down(unsigned short retrok)
+static void retro_key_down(unsigned short retrok)
 {
-   //IKBD_PressSTKey(retrok,1); 
    unsigned short key=retrok;
 
-   if (key == syskbd_up || key == SDLK_UP) {
+   if (key == syskbd_up || key == SDLK_UP)
+   {
       SETBIT(control_status, CONTROL_UP);
       control_last = CONTROL_UP;
    }
-   else if (key == syskbd_down || key == SDLK_DOWN) {
+   else if (key == syskbd_down || key == SDLK_DOWN)
+   {
       SETBIT(control_status, CONTROL_DOWN);
       control_last = CONTROL_DOWN;
    }
-   else if (key == syskbd_left || key == SDLK_LEFT) {
+   else if (key == syskbd_left || key == SDLK_LEFT)
+   {
       SETBIT(control_status, CONTROL_LEFT);
       control_last = CONTROL_LEFT;
    }
-   else if (key == syskbd_right || key == SDLK_RIGHT) {
+   else if (key == syskbd_right || key == SDLK_RIGHT)
+   {
       SETBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
    }
-   else if (key == syskbd_pause) {
+   else if (key == syskbd_pause)
+   {
       SETBIT(control_status, CONTROL_PAUSE);
       control_last = CONTROL_PAUSE;
    }
-   else if (key == syskbd_end) {
+   else if (key == syskbd_end)
+   {
       SETBIT(control_status, CONTROL_END);
       control_last = CONTROL_END;
    }
-   else if (key == syskbd_xtra) {
+   else if (key == syskbd_xtra)
+   {
       SETBIT(control_status, CONTROL_EXIT);
       control_last = CONTROL_EXIT;
    }
-   else if (key == syskbd_fire) {
+   else if (key == syskbd_fire)
+   {
       SETBIT(control_status, CONTROL_FIRE);
       control_last = CONTROL_FIRE;
    }
 }
 
-void retro_key_up(unsigned short retrok)
+static void retro_key_up(unsigned short retrok)
 {
    unsigned short key=retrok;
-   //IKBD_PressSTKey(retrok,0);
-   if (key == syskbd_up || key == SDLK_UP) {
+
+   if (key == syskbd_up || key == SDLK_UP)
+   {
       CLRBIT(control_status, CONTROL_UP);
       control_last = CONTROL_UP;
    }
-   else if (key == syskbd_down || key == SDLK_DOWN) {
+   else if (key == syskbd_down || key == SDLK_DOWN)
+   {
       CLRBIT(control_status, CONTROL_DOWN);
       control_last = CONTROL_DOWN;
    }
-   else if (key == syskbd_left || key == SDLK_LEFT) {
+   else if (key == syskbd_left || key == SDLK_LEFT)
+   {
       CLRBIT(control_status, CONTROL_LEFT);
       control_last = CONTROL_LEFT;
    }
-   else if (key == syskbd_right || key == SDLK_RIGHT) {
+   else if (key == syskbd_right || key == SDLK_RIGHT)
+   {
       CLRBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
    }
-   else if (key == syskbd_pause) {
+   else if (key == syskbd_pause)
+   {
       CLRBIT(control_status, CONTROL_PAUSE);
       control_last = CONTROL_PAUSE;
    }
-   else if (key == syskbd_end) {
+   else if (key == syskbd_end)
+   {
       CLRBIT(control_status, CONTROL_END);
       control_last = CONTROL_END;
    }
-   else if (key == syskbd_xtra) {
+   else if (key == syskbd_xtra)
+   {
       CLRBIT(control_status, CONTROL_EXIT);
       control_last = CONTROL_EXIT;
    }
-   else if (key  == syskbd_fire) {
+   else if (key  == syskbd_fire)
+   {
       CLRBIT(control_status, CONTROL_FIRE);
       control_last = CONTROL_FIRE;
    }
@@ -213,16 +222,6 @@ int Retro_PollEvent(void)
 
       if(Key_Sate[i]  && Key_Sate2[i]==0)
       {
-#if 0
-         if(i==308/*SDLK_RALT*/)
-         {
-            KBMOD=-KBMOD;
-            printf("Modifier pressed %d \n",KBMOD); 
-            Key_Sate2[i]=1;
-
-            continue;
-         }
-#endif
          SDL_keysym keysym;
 
          keysym.scancode=i;
@@ -231,8 +230,6 @@ int Retro_PollEvent(void)
          if(KBMOD==1)keysym.mod=0x0200;
          else keysym.mod=0;
 
-         //Keymap_KeyDown(&keysym);
-
          retro_key_down(i);
          Key_Sate2[i]=1;
          bitstart=1;//
@@ -240,24 +237,12 @@ int Retro_PollEvent(void)
       }
       else if ( !Key_Sate[i] && Key_Sate2[i]==1 )
       {
-#if 0
-         if(i==308/*SDLK_RALT*/)
-         {
-            //KBMOD=-KBMOD;
-            //printf("Modifier pressed %d \n",KBMOD); 
-            Key_Sate2[i]=0;
-
-            continue;
-         }
-#endif
          SDL_keysym keysym;
 
          keysym.scancode=i;
          keysym.sym=i;
          keysym.unicode=0;
          keysym.mod=0;
-
-         //Keymap_KeyUp(&keysym);
 
          retro_key_up( i );
          Key_Sate2[i]=0;

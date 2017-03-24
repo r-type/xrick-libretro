@@ -15,7 +15,6 @@ int retroh=200;
 #endif
 
 extern int SHIFTON,SND ,snd_sampler;
-extern short signed int SNDBUF[1024*2];
 extern char RPATH[512];
 extern char RETRO_DIR[512];
 
