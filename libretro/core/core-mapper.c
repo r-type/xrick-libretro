@@ -101,10 +101,8 @@ void texture_init(void)
    memset(Retro_Screen, 0, sizeof(Retro_Screen));
 }
 
-static void retro_key_down(unsigned short retrok)
+static void retro_key_down(unsigned short key)
 {
-   unsigned short key=retrok;
-
    if (key == syskbd_up || key == SDLK_UP)
    {
       SETBIT(control_status, CONTROL_UP);
@@ -147,10 +145,8 @@ static void retro_key_down(unsigned short retrok)
    }
 }
 
-static void retro_key_up(unsigned short retrok)
+static void retro_key_up(unsigned short key)
 {
-   unsigned short key=retrok;
-
    if (key == syskbd_up || key == SDLK_UP)
    {
       CLRBIT(control_status, CONTROL_UP);
