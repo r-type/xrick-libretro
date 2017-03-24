@@ -14,7 +14,7 @@ int retroh=200;
 #define BPP 4
 #endif
 
-extern int SHIFTON,SND ,snd_sampler;
+extern int SHIFTON,SND;
 extern char RPATH[512];
 extern char RETRO_DIR[512];
 
@@ -222,22 +222,6 @@ void retro_run(void)
    co_switch(emuThread);
 
 }
-
-#if 0
-unsigned int lastdown,lastup,lastchar;
-static void keyboard_cb(bool down, unsigned keycode,
-      uint32_t character, uint16_t mod)
-{
-   //logging.log(RETRO_LOG_INFO, "Down: %s, Code: %d, Char: %u, Mod: %u.\n",
-   //    down ? "yes" : "no", keycode, character, mod);
-
-   /*
-      if(down)lastdown=keycode;
-      else lastup=keycode;
-      lastchar=character;
-      */
-}
-#endif
 
 bool retro_load_game(const struct retro_game_info *info)
 {

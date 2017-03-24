@@ -32,9 +32,6 @@ uint16_t Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #endif 
 
-//SOUND
-int snd_sampler = 22050 / 50;
-
 //PATH
 char RPATH[512];
 
