@@ -22,6 +22,7 @@ ifeq ($(platform), android)
    fpic := -fPIC
    SHARED :=  -Wl,--fix-cortex-a8 -llog -lz -shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
    PLATFLAGS := -DAND -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
+
 else ifeq ($(platform), unix)
    CC = gcc
  TARGET := $(TARGET_NAME)_libretro.so
@@ -29,12 +30,13 @@ else ifeq ($(platform), unix)
    SHARED :=  -lz -shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
    PLATFLAGS := -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
 else ifeq ($(platform), osx)
-   TARGET := libretro.dylib
+   TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
    PLATFLAGS := -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
+
 else ifeq ($(platform), wii)
-   TARGET := skelsdl_libretro_wii.a
+   TARGET := $(TARGET_NAME)_libretro_wii.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
    CXX = $(DEVKITPPC)/bin/powerpc-eabi-g++$(EXE_EXT)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)   
@@ -44,8 +46,9 @@ else ifeq ($(platform), wii)
 	-D__powerpc__ -D__POWERPC__ -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__
    SHARED :=   -lm -lc
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD
+
 else ifeq ($(platform), ps3)
-   TARGET := skelsdl_libretro_ps3.a
+   TARGET := $(TARGET_NAME)_libretro_ps3.a
    CC = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-gcc.exe
    CXX = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-g++.exe
    AR = $(CELL_SDK)/host-win32/ppu/bin/ppu-lv2-ar.exe
@@ -54,6 +57,7 @@ else ifeq ($(platform), ps3)
    CFLAGS += -DSDL_BYTEORDER=SDL_BIG_ENDIAN -DMSB_FIRST -DBYTE_ORDER=BIG_ENDIAN  -DBYTE_ORDER=BIG_ENDIAN \
 	-D__CELLOS_LV2 -DHAVE_ASPRINTF
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD 
+
 else
    #CC = i586-mingw32msvc-gcc
    CC = x86_64-w64-mingw32-gcc
