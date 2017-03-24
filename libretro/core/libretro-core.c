@@ -12,7 +12,7 @@ int retrow=1024;
 int retroh=1024;
 int retrob=4;
 
-extern int SHIFTON,pauseg,SND ,snd_sampler;
+extern int SHIFTON,SND ,snd_sampler;
 extern short signed int SNDBUF[1024*2];
 extern char RPATH[512];
 extern char RETRO_DIR[512];
@@ -105,8 +105,6 @@ static void retro_wrap_emulator(void)
    SND=1;
    sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0",retro_system_directory);
    pre_main(RPATH);
-
-   pauseg=-1;
 
    environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, 0); 
 
@@ -243,20 +241,15 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 
 void retro_run(void)
 {
-   int x;
-
    bool updated = false;
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       update_variables();
 
-   if(pauseg==0)
-   {
-      Retro_PollEvent();
+   Retro_PollEvent();
 
-      if(SND==1)
-         syssnd_callback(NULL,441*2);			
-   }   
+   if(SND==1)
+      syssnd_callback(NULL,441*2);			
 
    if(sdlscrn)
       video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
@@ -304,9 +297,8 @@ bool retro_load_game(const struct retro_game_info *info)
    return true;
 }
 
-void retro_unload_game(void){
-
-   pauseg=0;
+void retro_unload_game(void)
+{
 }
 
 unsigned retro_get_region(void)

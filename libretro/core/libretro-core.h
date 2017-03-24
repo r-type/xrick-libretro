@@ -32,8 +32,6 @@ extern cothread_t emuThread;
 extern char Key_Sate[512];
 extern char Key_Sate2[512];
 
-extern int pauseg; 
-
 #include "SDL_video.h"
 
 #define LOGI printf

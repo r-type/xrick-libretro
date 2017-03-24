@@ -48,7 +48,6 @@ char RPATH[512];
 int MAXPAS=6,SHIFTON=-1,MOUSE_EMULATED=-1,PAS=4;
 int SND; //SOUND ON/OFF
 static int firstps=0;
-int pauseg=0; //enter_gui
 
 //JOY
 int al[2][2];//left analog1
