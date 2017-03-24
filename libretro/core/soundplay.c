@@ -74,7 +74,7 @@ void syssnd_callback(U8 *stream, int len)
       if (sndMute)
       {
          //stream[i] = 0x80;
-         audio_cb(0,0);
+         s = 0;
       }
       else
       {
@@ -87,8 +87,8 @@ void syssnd_callback(U8 *stream, int len)
          //stream[i] = (U8)s;
 #endif
          s=s<<8 |s;
-         audio_cb(s,s);
       }
+      audio_cb(s,s);
    }
 
 }
