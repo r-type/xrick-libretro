@@ -39,7 +39,7 @@ else ifneq (,$(findstring osx,$(platform)))
 
 # iOS
 else ifneq (,$(findstring ios,$(platform)))
-   TARGET := $(TARGET_NAME)_libretro.dylib
+   TARGET := $(TARGET_NAME)_libretro_ios.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
    PLATFLAGS := -DALIGN_DWORD  -D__LIBRETRO__
