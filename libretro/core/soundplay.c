@@ -1,13 +1,14 @@
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "system.h"
 #include "game.h"
 #include "syssnd.h"
 #include "debug.h"
 #include "data.h"
 
-#include <stdint.h>
-
 #define SDL_MIX_MAXVOLUME 128
-
 
 #define ADJVOL(S) (((S)*sndVol)/SDL_MIX_MAXVOLUME)
 

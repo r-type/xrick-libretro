@@ -1,23 +1,49 @@
 #START COMMON PART
+INCFLAGS   := -I$(CORE_DIR)/include -I$(CORE_DIR)/src -I$(CORE_DIR)/libretro -I$(CORE_DIR)/libretro/sdl_wrapp -I$(CORE_DIR)/libretro/include
 
-EMU = ./src
-
-XOBJECTS = $(EMU)/unzip.o $(EMU)/data.o $(EMU)/scr_xrick.o $(EMU)/scr_pause.o $(EMU)/scr_imain.o $(EMU)/scr_imap.o\
-	 $(EMU)/scr_gameover.o $(EMU)/scr_getname.o $(EMU)/dat_picsPC.o $(EMU)/dat_picsST.o $(EMU)/dat_screens.o\
-	 $(EMU)/dat_tilesPC.o $(EMU)/dat_tilesST.o $(EMU)/dat_maps.o $(EMU)/dat_ents.o $(EMU)/dat_spritesST.o\
-	 $(EMU)/dat_spritesPC.o $(EMU)/ents.o $(EMU)/e_bullet.o $(EMU)/e_bomb.o $(EMU)/e_rick.o $(EMU)/e_sbonus.o\
-	 $(EMU)/e_them.o $(EMU)/e_bonus.o $(EMU)/e_box.o $(EMU)/rects.o $(EMU)/util.o $(EMU)/game.o\
-	 $(EMU)/xrick.o $(EMU)/draw.o $(EMU)/maps.o \
-	 $(EMU)/sysvid.o $(EMU)/syskbd.o \
-	 $(EMU)/control.o $(EMU)/system.o $(EMU)/scroller.o $(EMU)/sysevt.o $(EMU)/sysarg.o $(EMU)/syssnd.o \
-	 $(EMU)/sysjoy.o $(EMU)/dat_snd.o
-
-BUILD_APP =  $(XOBJECTS) $(LIBRETRO)/sdl_wrapp/sdl_primitives.o $(LIBRETRO)/sdl_wrapp/bmp.o
-
-HINCLUDES := -I$(EMU)  -I$(EMU)/../include \
-	-I. -I$(LIBRETRO) -I$(LIBRETRO)/core -I$(LIBRETRO)/sdl_wrapp \
-	-I$(LIBRETRO)/include 
-
-OBJECTS :=  $(BUILD_APP) $(LIBRETRO)/core/libretro-core.o $(LIBRETRO)/core/core-mapper.o 
-
-#END COMMON PART 
+SOURCES_C := \
+	$(CORE_DIR)/src/unzip.c \
+	$(CORE_DIR)/src/data.c \
+	$(CORE_DIR)/src/scr_xrick.c \
+	$(CORE_DIR)/src/scr_pause.c \
+	$(CORE_DIR)/src/scr_imain.c \
+	$(CORE_DIR)/src/scr_imap.c \
+	$(CORE_DIR)/src/scr_gameover.c \
+	$(CORE_DIR)/src/scr_getname.c \
+	$(CORE_DIR)/src/dat_picsPC.c \
+	$(CORE_DIR)/src/dat_picsST.c \
+	$(CORE_DIR)/src/dat_screens.c \
+	$(CORE_DIR)/src/dat_tilesPC.c \
+	$(CORE_DIR)/src/dat_tilesST.c \
+	$(CORE_DIR)/src/dat_maps.c \
+	$(CORE_DIR)/src/dat_ents.c \
+	$(CORE_DIR)/src/dat_spritesST.c \
+	$(CORE_DIR)/src/dat_spritesPC.c \
+	$(CORE_DIR)/src/ents.c \
+	$(CORE_DIR)/src/e_bullet.c \
+	$(CORE_DIR)/src/e_bomb.c \
+	$(CORE_DIR)/src/e_rick.c \
+	$(CORE_DIR)/src/e_sbonus.c \
+	$(CORE_DIR)/src/e_them.c \
+	$(CORE_DIR)/src/e_bonus.c \
+	$(CORE_DIR)/src/e_box.c \
+	$(CORE_DIR)/src/rects.c \
+	$(CORE_DIR)/src/util.c \
+	$(CORE_DIR)/src/game.c \
+	$(CORE_DIR)/src/xrick.c \
+	$(CORE_DIR)/src/draw.c \
+	$(CORE_DIR)/src/maps.c \
+	$(CORE_DIR)/src/sysvid.c \
+	$(CORE_DIR)/src/syskbd.c \
+	$(CORE_DIR)/src/control.c \
+	$(CORE_DIR)/src/system.c \
+	$(CORE_DIR)/src/scroller.c \
+	$(CORE_DIR)/src/sysevt.c \
+	$(CORE_DIR)/src/sysarg.c \
+	$(CORE_DIR)/src/sysjoy.c \
+	$(CORE_DIR)/src/dat_snd.c \
+	$(CORE_DIR)/libretro/core/soundplay.c \
+	$(CORE_DIR)/libretro/sdl_wrapp/sdl_primitives.c \
+	$(CORE_DIR)/libretro/sdl_wrapp/bmp.c \
+	$(CORE_DIR)/libretro/core/libretro-core.c \
+	$(CORE_DIR)/libretro/core/core-mapper.o 
