@@ -114,19 +114,6 @@ long GetTicks(void)
 
 } 
 
-//NO SURE FIND BETTER WAY TO COME BACK IN MAIN THREAD IN HATARI GUI
-void gui_poll_events(void)
-{
-   Ktime = GetTicks();
-
-   if(Ktime - LastFPSTime >= 1000/50)
-   {
-      frame++; 
-      LastFPSTime = Ktime;		
-      co_switch(mainThread);
-   }
-}
-
 void texture_uninit(void)
 {
    SDL_Uninit();

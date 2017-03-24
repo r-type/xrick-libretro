@@ -133,7 +133,6 @@ static void Emu_init(void)
       mainThread = co_active();
       emuThread = co_create(65536*sizeof(void*), retro_wrap_emulator);
    }
-
 }
 
 static void Emu_uninit(void)
