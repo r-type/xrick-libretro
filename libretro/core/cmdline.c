@@ -10,9 +10,8 @@ static const char* xargv_cmd[64];
 int PARAMCOUNT=0;
 
 extern int  skel_main(int argc, char *argv[]);
-void parse_cmdline( const char *argv );
 
-void Add_Option(const char* option)
+static void Add_Option(const char* option)
 {
    static int first=0;
 
@@ -25,53 +24,17 @@ void Add_Option(const char* option)
    sprintf(XARGV[PARAMCOUNT++],"%s\0",option);
 }
 
-int pre_main(const char *argv)
+static void parse_cmdline(const char *argv)
 {
-   int i;
-   bool Only1Arg;
+   char *p,*p2,*start_of_word;
+   int c,c2;
+   static char buffer[512*4];
+   enum states { DULL, IN_WORD, IN_STRING } state = DULL;
 
-   parse_cmdline(argv); 
+   strcpy(buffer,argv);
+   strcat(buffer," \0");
 
-   Only1Arg = (strcmp(ARGUV[0],"skelsdl") == 0) ?  1: 0;
-
-   for (i = 0; i<64; i++)
-      xargv_cmd[i] = NULL;
-
-   //	Add_Option("hatari");
-
-   if(Only1Arg)
-   {
-      Add_Option("skelsdl");
-      Add_Option(RPATH/*ARGUV[0]*/);
-   }
-   else
-   { // Pass all cmdline args
-      for(i = 0; i < ARGUC; i++)
-         Add_Option(ARGUV[i]);
-   }
-
-   for (i = 0; i < PARAMCOUNT; i++)
-   {
-      xargv_cmd[i] = (char*)(XARGV[i]);
-      printf("%2d  %s\n",i,XARGV[i]);
-   }
-
-   skel_main(PARAMCOUNT,( char **)xargv_cmd); 
-
-   xargv_cmd[PARAMCOUNT - 2] = NULL;
-}
-
-void parse_cmdline(const char *argv)
-{
-	char *p,*p2,*start_of_word;
-	int c,c2;
-	static char buffer[512*4];
-	enum states { DULL, IN_WORD, IN_STRING } state = DULL;
-	
-	strcpy(buffer,argv);
-	strcat(buffer," \0");
-
-	for (p = buffer; *p != '\0'; p++)
+   for (p = buffer; *p != '\0'; p++)
    {
       c = (unsigned char) *p; /* convert to unsigned char for is* functions */
       switch (state)
@@ -118,4 +81,39 @@ void parse_cmdline(const char *argv)
       }	
    }
 }
+
+int pre_main(const char *argv)
+{
+   int i;
+   bool Only1Arg;
+
+   parse_cmdline(argv); 
+
+   Only1Arg = (strcmp(ARGUV[0],"skelsdl") == 0) ?  1: 0;
+
+   for (i = 0; i<64; i++)
+      xargv_cmd[i] = NULL;
+
+   if(Only1Arg)
+   {
+      Add_Option("skelsdl");
+      Add_Option(RPATH/*ARGUV[0]*/);
+   }
+   else
+   { // Pass all cmdline args
+      for(i = 0; i < ARGUC; i++)
+         Add_Option(ARGUV[i]);
+   }
+
+   for (i = 0; i < PARAMCOUNT; i++)
+   {
+      xargv_cmd[i] = (char*)(XARGV[i]);
+      printf("%2d  %s\n",i,XARGV[i]);
+   }
+
+   skel_main(PARAMCOUNT,( char **)xargv_cmd); 
+
+   xargv_cmd[PARAMCOUNT - 2] = NULL;
+}
+
 
