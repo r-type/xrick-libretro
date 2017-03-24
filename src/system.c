@@ -74,23 +74,12 @@ U32
 sys_gettime(void)
 {
   static U32 ticks_base = 0;
-  U32 ticks;
-
-  ticks = SDL_GetTicks();
+  U32 ticks = SDL_GetTicks();
 
   if (!ticks_base)
     ticks_base = ticks;
 
   return ticks - ticks_base;
-}
-
-/*
- * Sleep a number of microseconds
- */
-void
-sys_sleep(int s)
-{
-  SDL_Delay(s);
 }
 
 /*
