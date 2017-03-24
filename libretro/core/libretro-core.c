@@ -6,8 +6,8 @@ cothread_t mainThread;
 cothread_t emuThread;
 
 int VIRTUAL_WIDTH ;
-int retrow=1024; 
-int retroh=1024;
+int retrow=320; 
+int retroh=200;
 int retrob=4;
 
 extern int SHIFTON,SND ,snd_sampler;
@@ -53,10 +53,6 @@ void retro_set_environment(retro_environment_t cb)
    environ_cb = cb;
 
    struct retro_variable variables[] = {
-      {
-         "Skel_resolution",
-         "Internal resolution; 640x480|832x576|800x600|960x720|1024x768|1024x1024",
-      },
       { NULL, NULL },
    };
 
@@ -68,31 +64,6 @@ void retro_set_environment(retro_environment_t cb)
 
 static void update_variables(void)
 {
-   struct retro_variable var = {
-      .key = "Skel_resolution",
-   };
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      char *pch;
-      char str[100];
-      snprintf(str, sizeof(str), var.value);
-
-      pch = strtok(str, "x");
-      if (pch)
-         retrow = strtoul(pch, NULL, 0);
-      pch = strtok(NULL, "x");
-      if (pch)
-         retroh = strtoul(pch, NULL, 0);
-
-      retrow=WINDOW_WIDTH;
-      retroh=WINDOW_HEIGHT;
-
-      fprintf(stderr, "[libretro-test]: Got size: %u x %u.\n", retrow, retroh);
-
-      VIRTUAL_WIDTH = retrow;
-      texture_init();
-   }
 }
 
 static void retro_wrap_emulator(void)
