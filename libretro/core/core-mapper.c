@@ -38,10 +38,6 @@ char RPATH[512];
 //EMU FLAGS
 int SND; //SOUND ON/OFF
 
-//JOY
-int al[2][2];//left analog1
-int ar[2][2];//right analog1
-
 //KEYBOARD
 char Key_Sate[512];
 char Key_Sate2[512];
