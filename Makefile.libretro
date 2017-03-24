@@ -44,6 +44,7 @@ else ifneq (,$(findstring ios,$(platform)))
    SHARED := -dynamiclib
    PLATFLAGS := -DALIGN_DWORD  -D__LIBRETRO__
 
+# Nintendo Wii
 else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro_wii.a
    CC = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
