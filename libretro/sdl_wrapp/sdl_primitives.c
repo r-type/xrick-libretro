@@ -8,8 +8,8 @@
 #include "sdl_primitives.h"
 
 #define VIRTUAL_WIDTH buffer->w
-//pitch
 
+#if 0
 void SDL_DrawPixel(SDL_Surface *buffer,int x, int y, unsigned  color)
 {
    int idx;
@@ -466,9 +466,6 @@ void SDL_Draw_text(SDL_Surface *buffer,int x,int y,unsigned  fgcol,
 
    SDL_DrawString(buffer, x,y, text,max, scalex, scaley,fgcol,bgcol);	
 }
-
-
-
-
-
-
+#else
+#include "sdl_primitives_32b.c"
+#endif
