@@ -13,6 +13,7 @@ endif
 
 CORE_DIR := .
 TARGET_NAME := xrick
+WANT_ZLIB=1
 
 ifeq ($(platform), android)
    CC = arm-linux-androideabi-gcc
@@ -20,14 +21,14 @@ ifeq ($(platform), android)
    LD = @arm-linux-androideabi-g++ 
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
-   SHARED :=  -Wl,--fix-cortex-a8 -llog -lz -shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
+   SHARED :=  -Wl,--fix-cortex-a8 -llog --shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
    PLATFLAGS := -DAND -DALIGN_DWORD  -D__LIBRETRO__
 
 else ifeq ($(platform), unix)
    CC = gcc
  TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
-   SHARED :=  -lz -shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
+   SHARED :=  -shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
    PLATFLAGS := -DALIGN_DWORD  -D__LIBRETRO__
 
 # OS X
@@ -56,6 +57,7 @@ else ifeq ($(platform), wii)
 	-D__powerpc__ -D__POWERPC__ -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -DMSB_FIRST
    SHARED :=   -lm -lc
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD
+	WANT_ZLIB=0
 
 else ifeq ($(platform), ps3)
    TARGET := $(TARGET_NAME)_libretro_ps3.a
@@ -67,6 +69,7 @@ else ifeq ($(platform), ps3)
    CFLAGS += -DSDL_BYTEORDER=SDL_BIG_ENDIAN -DMSB_FIRST -DBYTE_ORDER=BIG_ENDIAN  -DBYTE_ORDER=BIG_ENDIAN \
 	-D__CELLOS_LV2 -DHAVE_ASPRINTF -DMSB_FIRST
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD 
+	WANT_ZLIB=0
 
 else
 	CC = gcc
@@ -79,6 +82,10 @@ ifeq ($(DEBUG), 1)
    CFLAGS += -O0 -g
 else
    CFLAGS += -O3
+endif
+
+ifeq ($(WANT_ZLIB), 1)
+CFLAGS += -DWANT_ZLIB
 endif
 
 #CFLAGS += -DFRONTEND_SUPPORTS_RGB565
@@ -103,13 +110,13 @@ $(TARGET): $(OBJECTS)
 
 else ifeq ($(platform), win)
 $(TARGET): $(OBJECTS)
-	$(CC) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS)  -lm -lz
+	$(CC) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS)  -lm
 else ifeq ($(platform), android)
 $(TARGET): $(OBJECTS)
-	$(CC) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS)  -lm -lz
+	$(CC) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS)  -lm
 else
 $(TARGET): $(OBJECTS)
-	$(CC) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS)  -lm -lz
+	$(CC) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS)  -lm
 
 endif
 
