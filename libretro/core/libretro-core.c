@@ -8,7 +8,11 @@ cothread_t emuThread;
 int VIRTUAL_WIDTH ;
 int retrow=320; 
 int retroh=200;
-int retrob=4;
+#ifdef RENDER16B
+#define BPP 2
+#else
+#define BPP 4
+#endif
 
 extern int SHIFTON,SND ,snd_sampler;
 extern short signed int SNDBUF[1024*2];
@@ -121,10 +125,8 @@ void retro_init(void)
 
 #ifndef RENDER16B
    enum retro_pixel_format fmt =RETRO_PIXEL_FORMAT_XRGB8888;
-   retrob=4;
 #else
    enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
-   retrob=2;
 #endif
    
    if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
@@ -253,11 +255,9 @@ bool retro_load_game(const struct retro_game_info *info)
 #ifdef RENDER16B
    memset(Retro_Screen,0,WINDOW_WIDTH*WINDOW_HEIGHT*2);
    SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT, 16, 0);
-   retrob=2;
 #else
    memset(Retro_Screen,0,WINDOW_WIDTH*WINDOW_HEIGHT*2*2);
    sdlscrn = SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT ,32, 0);
-   retrob=4;
 #endif
 
    return true;

@@ -4,6 +4,5 @@
 extern int VIRTUAL_WIDTH;
 extern int retrow ; 
 extern int retroh ;
-extern int retrob ;
 
 #endif
