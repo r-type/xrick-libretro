@@ -194,38 +194,8 @@ void retro_run(void)
       video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
 }
 
-static void extract_directory(char *buf, const char *path, size_t size)
-{
-   strncpy(buf, path, size - 1);
-   buf[size - 1] = '\0';
-
-   char *base = strrchr(buf, '/');
-   if (!base)
-      base = strrchr(buf, '\\');
-
-   if (base)
-      *base = '\0';
-   else
-   {
-      buf[0] = '.';
-      buf[1] = '\0';
-   }
-}
-
-char g_rom_dir[1024];
-
 bool retro_load_game(const struct retro_game_info *info)
 {
-   const char *used_dir  = NULL;
-
-   if (info)
-   {
-      extract_directory(g_rom_dir, info->path, sizeof(g_rom_dir));
-      used_dir = g_rom_dir;
-   }
-   else
-      used_dir = retro_system_directory;
-
    update_variables();
 
 #ifdef RENDER16B
@@ -237,7 +207,10 @@ bool retro_load_game(const struct retro_game_info *info)
 #endif
 
    SND=1;
-   sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0", used_dir);
+   if (info)
+      sprintf(RPATH,"\"xrick\" \"-data\" \"%s\"\0", info->path);
+   else
+      sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0", retro_system_directory);
    pre_main(RPATH);
 	game_run();
 
