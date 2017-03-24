@@ -36,7 +36,7 @@ unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 char RPATH[512];
 
 //EMU FLAGS
-int MAXPAS=6,SHIFTON=-1,MOUSE_EMULATED=-1,PAS=4;
+int MAXPAS=6,PAS=4;
 int SND; //SOUND ON/OFF
 static int firstps=0;
 
@@ -197,12 +197,9 @@ static void retro_key_up(unsigned short retrok)
 }
 
 #include "sdl-wrapper.c"
-extern  const char STScanCode[SDLK_LAST] ;
 
 int bitstart=0;
-int pushi=0; //mouse button
 int keydown=0,keyup=0;
-int KBMOD=-1;
 int SurfaceFormat=3;
 
 int Retro_PollEvent(void)
@@ -224,12 +221,11 @@ int Retro_PollEvent(void)
          keysym.scancode=i;
          keysym.sym=i;
          keysym.unicode=0;
-         if(KBMOD==1)keysym.mod=0x0200;
-         else keysym.mod=0;
+         keysym.mod=0;
 
          retro_key_down(i);
          Key_Sate2[i]=1;
-         bitstart=1;//
+         bitstart=1;
          keydown++;
       }
       else if ( !Key_Sate[i] && Key_Sate2[i]==1 )

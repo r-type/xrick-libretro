@@ -14,7 +14,7 @@ int retroh=200;
 #define BPP 4
 #endif
 
-extern int SHIFTON,SND;
+extern int SND;
 extern char RPATH[512];
 extern char RETRO_DIR[512];
 
