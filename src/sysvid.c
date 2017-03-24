@@ -11,7 +11,8 @@
  * You must not remove this notice, or any other, from this software.
  */
 
-#include <stdlib.h> /* malloc */
+#include <stdlib.h>
+#include <string.h>
 
 #include <SDL.h>
 

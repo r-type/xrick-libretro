@@ -1,5 +1,5 @@
 #ifndef RETROSCREEN_H
-#define RETROSCREEN_H 1
+#define RETROSCREEN_H
 
 extern int VIRTUAL_WIDTH;
 extern int retrow ; 

@@ -45,7 +45,7 @@ else ifeq ($(platform), wii)
 		$(ZLIB_DIR)gzwrite.o $(ZLIB_DIR)infback.o $(ZLIB_DIR)inffast.o $(ZLIB_DIR)inflate.o \
 		$(ZLIB_DIR)trees.o $(ZLIB_DIR)inftrees.o $(ZLIB_DIR)uncompr.o $(ZLIB_DIR)uncompr.o $(ZLIB_DIR)zutil.o 
    CFLAGS += -DSDL_BYTEORDER=SDL_BIG_ENDIAN -DMSB_FIRST -DBYTE_ORDER=BIG_ENDIAN  -DBYTE_ORDER=BIG_ENDIAN \
-	-DHAVE_MEMALIGN -DHAVE_ASPRINTF -I$(ZLIB_DIR) -I$(DEVKITPRO)/libogc/include \
+	-DHAVE_ASPRINTF -I$(ZLIB_DIR) -I$(DEVKITPRO)/libogc/include \
 	-D__powerpc__ -D__POWERPC__ -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__
    SHARED :=   -lm -lpthread -lc
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD
@@ -61,7 +61,7 @@ else ifeq ($(platform), ps3)
 		$(ZLIB_DIR)trees.o $(ZLIB_DIR)inftrees.o $(ZLIB_DIR)uncompr.o $(ZLIB_DIR)uncompr.o $(ZLIB_DIR)zutil.o 
    SHARED :=   -lm -lpthread -lc
    CFLAGS += -DSDL_BYTEORDER=SDL_BIG_ENDIAN -DMSB_FIRST -DBYTE_ORDER=BIG_ENDIAN  -DBYTE_ORDER=BIG_ENDIAN \
-	-D__CELLOS_LV2 -DHAVE_MEMALIGN -DHAVE_ASPRINTF -I$(ZLIB_DIR) 
+	-D__CELLOS_LV2 -DHAVE_ASPRINTF -I$(ZLIB_DIR) 
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD 
 else
    #CC = i586-mingw32msvc-gcc

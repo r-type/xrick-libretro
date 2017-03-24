@@ -13,49 +13,52 @@
 void SDL_DrawPixel(SDL_Surface *buffer,int x, int y, unsigned  color)
 {
    int idx;
-	
-   if(buffer->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)buffer->pixels;
-   	idx=x+y*VIRTUAL_WIDTH;
-   	mbuffer[idx]=color;	
+
+   if(buffer->format->BitsPerPixel == 16)
+   {
+      unsigned short *mbuffer=(unsigned short *)buffer->pixels;
+      idx=x+y*VIRTUAL_WIDTH;
+      mbuffer[idx]=color;	
    }
-   else if(buffer->format->BitsPerPixel == 32) {
-	unsigned  *mbuffer=(unsigned *)buffer->pixels;
-   	idx=x+y*VIRTUAL_WIDTH;
-   	mbuffer[idx]=color;
+   else if(buffer->format->BitsPerPixel == 32)
+   {
+      unsigned  *mbuffer=(unsigned *)buffer->pixels;
+      idx=x+y*VIRTUAL_WIDTH;
+      mbuffer[idx]=color;
 
    }
-	
 }
 
 void SDL_DrawFRect(SDL_Surface *buffer,int x,int y,int dx,int dy,unsigned  color)
 {
    int i,j,idx;
 
-   if(buffer->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)buffer->pixels;
+   if(buffer->format->BitsPerPixel == 16)
+   {
+      unsigned short *mbuffer=(unsigned short *)buffer->pixels;
 
-   	for(i=x;i<x+dx;i++)
-   	{
-      		for(j=y;j<y+dy;j++)
-      		{
-         		idx=i+j*VIRTUAL_WIDTH;
-         		mbuffer[idx]=color;	
-      		}
-	}
+      for(i=x;i<x+dx;i++)
+      {
+         for(j=y;j<y+dy;j++)
+         {
+            idx=i+j*VIRTUAL_WIDTH;
+            mbuffer[idx]=color;	
+         }
+      }
    }
-   else if(buffer->format->BitsPerPixel == 32) {
+   else if(buffer->format->BitsPerPixel == 32)
+   {
 
-	unsigned  *mbuffer=(unsigned  *)buffer->pixels;
+      unsigned  *mbuffer=(unsigned  *)buffer->pixels;
 
-   	for(i=x;i<x+dx;i++)
-   	{
-      		for(j=y;j<y+dy;j++)
-      		{
-         		idx=i+j*VIRTUAL_WIDTH;
-         		mbuffer[idx]=color;	
-      		}
-	}
+      for(i=x;i<x+dx;i++)
+      {
+         for(j=y;j<y+dy;j++)
+         {
+            idx=i+j*VIRTUAL_WIDTH;
+            mbuffer[idx]=color;	
+         }
+      }
    }
 
 
@@ -65,44 +68,45 @@ void SDL_DrawRect(SDL_Surface  *buffer,int x,int y,int dx,int dy,unsigned   colo
 {
    int i,j,idx;
 
-   if(buffer->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)buffer->pixels;
+   if(buffer->format->BitsPerPixel == 16)
+   {
+      unsigned short *mbuffer=(unsigned short *)buffer->pixels;
 
-   	for(i=x;i<x+dx;i++)
-   	{
-      		idx=i+y*VIRTUAL_WIDTH;
-      		mbuffer[idx]=color;
-      		idx=i+(y+dy)*VIRTUAL_WIDTH;
-   		mbuffer[idx]=color;
-   	}
+      for(i=x;i<x+dx;i++)
+      {
+         idx=i+y*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;
+         idx=i+(y+dy)*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;
+      }
 
-   	for(j=y;j<y+dy;j++)
-   	{
-      		idx=x+j*VIRTUAL_WIDTH;
-      		mbuffer[idx]=color;	
-      		idx=(x+dx)+j*VIRTUAL_WIDTH;
-      		mbuffer[idx]=color;	
-   	}
+      for(j=y;j<y+dy;j++)
+      {
+         idx=x+j*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;	
+         idx=(x+dx)+j*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;	
+      }
    }
-   else if(buffer->format->BitsPerPixel == 32) {
+   else if(buffer->format->BitsPerPixel == 32)
+   {
+      unsigned  *mbuffer=(unsigned  *)buffer->pixels;
 
-	unsigned  *mbuffer=(unsigned  *)buffer->pixels;
+      for(i=x;i<x+dx;i++)
+      {
+         idx=i+y*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;
+         idx=i+(y+dy)*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;
+      }
 
-   	for(i=x;i<x+dx;i++)
-   	{
-      		idx=i+y*VIRTUAL_WIDTH;
-      		mbuffer[idx]=color;
-      		idx=i+(y+dy)*VIRTUAL_WIDTH;
-   		mbuffer[idx]=color;
-   	}
-
-   	for(j=y;j<y+dy;j++)
-   	{
-      		idx=x+j*VIRTUAL_WIDTH;
-      		mbuffer[idx]=color;	
-      		idx=(x+dx)+j*VIRTUAL_WIDTH;
-      		mbuffer[idx]=color;	
-   	}
+      for(j=y;j<y+dy;j++)
+      {
+         idx=x+j*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;	
+         idx=(x+dx)+j*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;	
+      }
 
    }
 
@@ -113,21 +117,23 @@ void SDL_DrawHline(SDL_Surface  *buffer,int x,int y,int dx,int dy,unsigned   col
 {
 	int i,j,idx;
 	
-   if(buffer->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)buffer->pixels;
-	for(i=x;i<x+dx;i++)
-   	{
-		idx=i+y*VIRTUAL_WIDTH;
-		mbuffer[idx]=color;		
-	}
+   if(buffer->format->BitsPerPixel == 16)
+   {
+      unsigned short *mbuffer=(unsigned short *)buffer->pixels;
+      for(i=x;i<x+dx;i++)
+      {
+         idx=i+y*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;		
+      }
    }
-   else if(buffer->format->BitsPerPixel == 32) {
-	unsigned  *mbuffer=(unsigned *)buffer->pixels;
-	for(i=x;i<x+dx;i++)
-   	{
-		idx=i+y*VIRTUAL_WIDTH;
-		mbuffer[idx]=color;		
-	}
+   else if(buffer->format->BitsPerPixel == 32)
+   {
+      unsigned  *mbuffer=(unsigned *)buffer->pixels;
+      for(i=x;i<x+dx;i++)
+      {
+         idx=i+y*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;		
+      }
 
    }
 
@@ -137,21 +143,23 @@ void SDL_DrawVline(SDL_Surface *buffer,int x,int y,int dx,int dy,unsigned   colo
 {
 	int i,j,idx;
 
-   if(buffer->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)buffer->pixels;
-	for(j=y;j<y+dy;j++)
-   	{
-		idx=x+j*VIRTUAL_WIDTH;
-		mbuffer[idx]=color;		
-	}
+   if(buffer->format->BitsPerPixel == 16)
+   {
+      unsigned short *mbuffer=(unsigned short *)buffer->pixels;
+      for(j=y;j<y+dy;j++)
+      {
+         idx=x+j*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;		
+      }
    }
-   else if(buffer->format->BitsPerPixel == 32) {
-	unsigned  *mbuffer=(unsigned *)buffer->pixels;
-	for(j=y;j<y+dy;j++)
-   	{
-		idx=x+j*VIRTUAL_WIDTH;
-		mbuffer[idx]=color;		
-	}
+   else if(buffer->format->BitsPerPixel == 32)
+   {
+      unsigned  *mbuffer=(unsigned *)buffer->pixels;
+      for(j=y;j<y+dy;j++)
+      {
+         idx=x+j*VIRTUAL_WIDTH;
+         mbuffer[idx]=color;		
+      }
    }
 	
 }
@@ -165,131 +173,132 @@ void SDL_Drawline(SDL_Surface *buffer,int x1,int y1,int x2,int y2,unsigned  colo
    sx = (dx >= 0) ? 1 : -1;
    sy = (dy >= 0) ? 1 : -1;
 
-   if(buffer->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)buffer->pixels;
-
-   if (dx==0)
+   if(buffer->format->BitsPerPixel == 16)
    {
-      if (dy>0)
-         SDL_DrawVline(buffer, x1, y1,0, dy, color);
-      else if (dy<0)
-         SDL_DrawVline(buffer, x1, y2,0, -dy, color);
-      else
+      unsigned short *mbuffer=(unsigned short *)buffer->pixels;
+
+      if (dx==0)
       {
-         idx=x1+y1*VIRTUAL_WIDTH;
+         if (dy>0)
+            SDL_DrawVline(buffer, x1, y1,0, dy, color);
+         else if (dy<0)
+            SDL_DrawVline(buffer, x1, y2,0, -dy, color);
+         else
+         {
+            idx=x1+y1*VIRTUAL_WIDTH;
+            mbuffer[idx]=color;
+         }
+         return;
+      }
+
+      if (dy == 0)
+      {
+         if (dx > 0)
+            SDL_DrawHline(buffer, x1, y1, dx, 0, color);
+         else if (dx < 0)
+            SDL_DrawHline(buffer, x2, y1, -dx,0, color);
+         return;
+      }
+
+      dx = sx * dx + 1;
+      dy = sy * dy + 1;
+
+      pixx = 1;
+      pixy = VIRTUAL_WIDTH;
+
+      pixx *= sx;
+      pixy *= sy;
+
+      if (dx < dy)
+      {
+         swaptmp = dx;
+         dx = dy;
+         dy = swaptmp;
+         swaptmp = pixx;
+         pixx = pixy;
+         pixy = swaptmp;
+      }
+
+      x = 0;
+      y = 0;
+
+      idx=x1+y1*VIRTUAL_WIDTH;
+
+      for (; x < dx; x++, idx +=pixx)
+      {
          mbuffer[idx]=color;
+         y += dy;
+         if (y >= dx)
+         {
+            y -= dx;
+            idx += pixy;
+         }
       }
-      return;
+
    }
-
-   if (dy == 0)
+   else if(buffer->format->BitsPerPixel == 32)
    {
-      if (dx > 0)
-         SDL_DrawHline(buffer, x1, y1, dx, 0, color);
-      else if (dx < 0)
-         SDL_DrawHline(buffer, x2, y1, -dx,0, color);
-      return;
-   }
+      unsigned  *mbuffer=(unsigned *)buffer->pixels;
 
-   dx = sx * dx + 1;
-   dy = sy * dy + 1;
-
-   pixx = 1;
-   pixy = VIRTUAL_WIDTH;
-
-   pixx *= sx;
-   pixy *= sy;
-
-   if (dx < dy)
-   {
-      swaptmp = dx;
-      dx = dy;
-      dy = swaptmp;
-      swaptmp = pixx;
-      pixx = pixy;
-      pixy = swaptmp;
-   }
-
-   x = 0;
-   y = 0;
-
-   idx=x1+y1*VIRTUAL_WIDTH;
-
-   for (; x < dx; x++, idx +=pixx)
-   {
-      mbuffer[idx]=color;
-      y += dy;
-      if (y >= dx)
+      if (dx==0)
       {
-         y -= dx;
-         idx += pixy;
+         if (dy>0)
+            SDL_DrawVline(buffer, x1, y1,0, dy, color);
+         else if (dy<0)
+            SDL_DrawVline(buffer, x1, y2,0, -dy, color);
+         else
+         {
+            idx=x1+y1*VIRTUAL_WIDTH;
+            mbuffer[idx]=color;
+         }
+         return;
       }
-   }
 
-   }
-   else if(buffer->format->BitsPerPixel == 32) {
-	unsigned  *mbuffer=(unsigned *)buffer->pixels;
-
-   if (dx==0)
-   {
-      if (dy>0)
-         SDL_DrawVline(buffer, x1, y1,0, dy, color);
-      else if (dy<0)
-         SDL_DrawVline(buffer, x1, y2,0, -dy, color);
-      else
+      if (dy == 0)
       {
-         idx=x1+y1*VIRTUAL_WIDTH;
+         if (dx > 0)
+            SDL_DrawHline(buffer, x1, y1, dx, 0, color);
+         else if (dx < 0)
+            SDL_DrawHline(buffer, x2, y1, -dx,0, color);
+         return;
+      }
+
+      dx = sx * dx + 1;
+      dy = sy * dy + 1;
+
+      pixx = 1;
+      pixy = VIRTUAL_WIDTH;
+
+      pixx *= sx;
+      pixy *= sy;
+
+      if (dx < dy)
+      {
+         swaptmp = dx;
+         dx = dy;
+         dy = swaptmp;
+         swaptmp = pixx;
+         pixx = pixy;
+         pixy = swaptmp;
+      }
+
+      x = 0;
+      y = 0;
+
+      idx=x1+y1*VIRTUAL_WIDTH;
+
+      for (; x < dx; x++, idx +=pixx)
+      {
          mbuffer[idx]=color;
+         y += dy;
+         if (y >= dx)
+         {
+            y -= dx;
+            idx += pixy;
+         }
       }
-      return;
-   }
-
-   if (dy == 0)
-   {
-      if (dx > 0)
-         SDL_DrawHline(buffer, x1, y1, dx, 0, color);
-      else if (dx < 0)
-         SDL_DrawHline(buffer, x2, y1, -dx,0, color);
-      return;
-   }
-
-   dx = sx * dx + 1;
-   dy = sy * dy + 1;
-
-   pixx = 1;
-   pixy = VIRTUAL_WIDTH;
-
-   pixx *= sx;
-   pixy *= sy;
-
-   if (dx < dy)
-   {
-      swaptmp = dx;
-      dx = dy;
-      dy = swaptmp;
-      swaptmp = pixx;
-      pixx = pixy;
-      pixy = swaptmp;
-   }
-
-   x = 0;
-   y = 0;
-
-   idx=x1+y1*VIRTUAL_WIDTH;
-
-   for (; x < dx; x++, idx +=pixx)
-   {
-      mbuffer[idx]=color;
-      y += dy;
-      if (y >= dx)
-      {
-         y -= dx;
-         idx += pixy;
-      }
-   }
 
    }
-
 }
 
 const float DEG2RAD = 3.14159/180;
@@ -299,36 +308,38 @@ void SDL_DrawCircle(SDL_Surface *buffer,int x, int y, int radius,unsigned  rgba,
    int i, x1, y1;
    float degInRad; 
 
-   if(buffer->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)buffer->pixels;
-
-    for (i = 0; i < 360; i++)
+   if(buffer->format->BitsPerPixel == 16)
    {
-      degInRad = i*DEG2RAD;
-      x1 = x + cos(degInRad) * radius;
-      y1 = y + sin(degInRad) * radius;
+      unsigned short *mbuffer=(unsigned short *)buffer->pixels;
 
-      if (full)
-         SDL_Drawline(buffer,x,y, x1,y1,rgba); 
-      else
-         mbuffer[x1+y1*VIRTUAL_WIDTH]=rgba;
+      for (i = 0; i < 360; i++)
+      {
+         degInRad = i*DEG2RAD;
+         x1 = x + cos(degInRad) * radius;
+         y1 = y + sin(degInRad) * radius;
+
+         if (full)
+            SDL_Drawline(buffer,x,y, x1,y1,rgba); 
+         else
+            mbuffer[x1+y1*VIRTUAL_WIDTH]=rgba;
+      }
+
    }
-
-   }
-   else if(buffer->format->BitsPerPixel == 32) {
-	unsigned  *mbuffer=(unsigned *)buffer->pixels;
-
-    for (i = 0; i < 360; i++)
+   else if(buffer->format->BitsPerPixel == 32)
    {
-      degInRad = i*DEG2RAD;
-      x1 = x + cos(degInRad) * radius;
-      y1 = y + sin(degInRad) * radius;
+      unsigned  *mbuffer=(unsigned *)buffer->pixels;
 
-      if (full)
-         SDL_Drawline(buffer,x,y, x1,y1,rgba); 
-      else
-         mbuffer[x1+y1*VIRTUAL_WIDTH]=rgba;
-   }
+      for (i = 0; i < 360; i++)
+      {
+         degInRad = i*DEG2RAD;
+         x1 = x + cos(degInRad) * radius;
+         y1 = y + sin(degInRad) * radius;
+
+         if (full)
+            SDL_Drawline(buffer,x,y, x1,y1,rgba); 
+         else
+            mbuffer[x1+y1*VIRTUAL_WIDTH]=rgba;
+      }
 
    }
 
@@ -347,82 +358,91 @@ void SDL_DrawString(SDL_Surface *surf, signed short int x, signed short int y,
    if(string == NULL)
       return;
 
-   for(strlen = 0; strlen<maxstrlen && string[strlen]; strlen++) {}
+   for(strlen = 0; strlen<maxstrlen && string[strlen]; strlen++)
+   {}
 
    surfw=strlen * 7 * xscale;
    surfh=8 * yscale;
 
-   if(surf->format->BitsPerPixel == 16){
-	unsigned short *mbuffer=(unsigned short *)surf->pixels;
-	unsigned short *yptr; 
-        linesurf =malloc(sizeof(unsigned short)*surfw*surfh );
-    	yptr = (unsigned short *)&linesurf[0];
+   if(surf->format->BitsPerPixel == 16)
+   {
+      unsigned short *mbuffer=(unsigned short *)surf->pixels;
+      unsigned short *yptr; 
+      linesurf =malloc(sizeof(unsigned short)*surfw*surfh );
+      yptr = (unsigned short *)&linesurf[0];
 
-	for(ypixel = 0; ypixel<8; ypixel++) {
+      for(ypixel = 0; ypixel<8; ypixel++)
+      {
 
-        	for(col=0; col<strlen; col++) {
-            		b = font_array[(string[col]^0x80)*8 + ypixel];
+         for(col=0; col<strlen; col++)
+         {
+            b = font_array[(string[col]^0x80)*8 + ypixel];
 
-            		for(bit=0; bit<7; bit++, yptr++) {              
-				*yptr = (b & (1<<(7-bit))) ? fg : bg;
-                		for(xrepeat = 1; xrepeat < xscale; xrepeat++, yptr++)
-                    			yptr[1] = *yptr;
-                        }
-        	}
+            for(bit=0; bit<7; bit++, yptr++)
+            {              
+               *yptr = (b & (1<<(7-bit))) ? fg : bg;
+               for(xrepeat = 1; xrepeat < xscale; xrepeat++, yptr++)
+                  yptr[1] = *yptr;
+            }
+         }
 
-        	for(yrepeat = 1; yrepeat < yscale; yrepeat++) 
-            		for(xrepeat = 0; xrepeat<surfw; xrepeat++, yptr++)
-                		*yptr = yptr[-surfw];
-           
-    	}
+         for(yrepeat = 1; yrepeat < yscale; yrepeat++) 
+            for(xrepeat = 0; xrepeat<surfw; xrepeat++, yptr++)
+               *yptr = yptr[-surfw];
 
-
-    	yptr = (unsigned short*)&linesurf[0];
+      }
 
 
-    	for(yrepeat = y; yrepeat < y+ surfh; yrepeat++) 
-        	for(xrepeat = x; xrepeat< x+surfw; xrepeat++,yptr++)
-             		if(*yptr!=0)mbuffer[xrepeat+yrepeat*surf->w] = *yptr;
+      yptr = (unsigned short*)&linesurf[0];
 
-	free(linesurf);
+
+      for(yrepeat = y; yrepeat < y+ surfh; yrepeat++) 
+         for(xrepeat = x; xrepeat< x+surfw; xrepeat++,yptr++)
+            if(*yptr!=0)mbuffer[xrepeat+yrepeat*surf->w] = *yptr;
+
+      free(linesurf);
 
    }
-   else if(surf->format->BitsPerPixel == 32) {
-	unsigned  *mbuffer=(unsigned *)surf->pixels;
-   	unsigned  *yptr; 
+   else if(surf->format->BitsPerPixel == 32)
+   {
+      unsigned  *mbuffer=(unsigned *)surf->pixels;
+      unsigned  *yptr; 
 
-        linesurf =malloc(sizeof(unsigned )*surfw*surfh );
-    	yptr = (unsigned *)&linesurf[0];
-
-
-	for(ypixel = 0; ypixel<8; ypixel++) {
-
-        	for(col=0; col<strlen; col++) {
-
-            		b = font_array[(string[col]^0x80)*8 + ypixel];
-
-            		for(bit=0; bit<7; bit++, yptr++) {              
-				*yptr = (b & (1<<(7-bit))) ? fg : bg;
-                		for(xrepeat = 1; xrepeat < xscale; xrepeat++, yptr++)
-                    			yptr[1] = *yptr;
-                        }
-        	}
-
-        	for(yrepeat = 1; yrepeat < yscale; yrepeat++) 
-            		for(xrepeat = 0; xrepeat<surfw; xrepeat++, yptr++)
-                		*yptr = yptr[-surfw];
-           
-    	}
+      linesurf =malloc(sizeof(unsigned )*surfw*surfh );
+      yptr = (unsigned *)&linesurf[0];
 
 
-    	yptr = (unsigned *)&linesurf[0];
+      for(ypixel = 0; ypixel<8; ypixel++)
+      {
 
-    	for(yrepeat = y; yrepeat < y+ surfh; yrepeat++) 
-        	for(xrepeat = x; xrepeat< x+surfw; xrepeat++,yptr++)
-             		if(*yptr!=0)mbuffer[xrepeat+yrepeat*surf->w] = *yptr;
-  
-   	free(linesurf);
-	
+         for(col=0; col<strlen; col++)
+         {
+
+            b = font_array[(string[col]^0x80)*8 + ypixel];
+
+            for(bit=0; bit<7; bit++, yptr++)
+            {              
+               *yptr = (b & (1<<(7-bit))) ? fg : bg;
+               for(xrepeat = 1; xrepeat < xscale; xrepeat++, yptr++)
+                  yptr[1] = *yptr;
+            }
+         }
+
+         for(yrepeat = 1; yrepeat < yscale; yrepeat++) 
+            for(xrepeat = 0; xrepeat<surfw; xrepeat++, yptr++)
+               *yptr = yptr[-surfw];
+
+      }
+
+
+      yptr = (unsigned *)&linesurf[0];
+
+      for(yrepeat = y; yrepeat < y+ surfh; yrepeat++) 
+         for(xrepeat = x; xrepeat< x+surfw; xrepeat++,yptr++)
+            if(*yptr!=0)mbuffer[xrepeat+yrepeat*surf->w] = *yptr;
+
+      free(linesurf);
+
 
    }
 
