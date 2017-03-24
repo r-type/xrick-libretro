@@ -103,91 +103,80 @@ void texture_init(void)
 
 static void retro_key_down(unsigned short key)
 {
-   if (key == SDLK_UP)
+   switch (key)
    {
-      SETBIT(control_status, CONTROL_UP);
-      control_last = CONTROL_UP;
-   }
-   else if (key == SDLK_DOWN)
-   {
-      SETBIT(control_status, CONTROL_DOWN);
-      control_last = CONTROL_DOWN;
-   }
-   else if (key == SDLK_LEFT)
-   {
-      SETBIT(control_status, CONTROL_LEFT);
-      control_last = CONTROL_LEFT;
-   }
-   else if (key == SDLK_RIGHT)
-   {
-      SETBIT(control_status, CONTROL_RIGHT);
-      control_last = CONTROL_RIGHT;
-   }
-   else if (key == SDLK_p)
-   {
-      SETBIT(control_status, CONTROL_PAUSE);
-      control_last = CONTROL_PAUSE;
-   }
-   else if (key == SDLK_e)
-   {
-      SETBIT(control_status, CONTROL_END);
-      control_last = CONTROL_END;
-   }
-   else if (key == SDLK_ESCAPE)
-   {
-      SETBIT(control_status, CONTROL_EXIT);
-      control_last = CONTROL_EXIT;
-   }
-   else if (key == SDLK_SPACE)
-   {
-      SETBIT(control_status, CONTROL_FIRE);
-      control_last = CONTROL_FIRE;
+      case SDLK_UP:
+         SETBIT(control_status, CONTROL_UP);
+         control_last = CONTROL_UP;
+         break;
+      case SDLK_DOWN:
+         SETBIT(control_status, CONTROL_DOWN);
+         control_last = CONTROL_DOWN;
+         break;
+      case SDLK_LEFT:
+         SETBIT(control_status, CONTROL_LEFT);
+         control_last = CONTROL_LEFT;
+         break;
+      case SDLK_RIGHT:
+         SETBIT(control_status, CONTROL_RIGHT);
+         control_last = CONTROL_RIGHT;
+         break;
+      case SDLK_p:
+         SETBIT(control_status, CONTROL_PAUSE);
+         control_last = CONTROL_PAUSE;
+         break;
+      case SDLK_e:
+         SETBIT(control_status, CONTROL_END);
+         control_last = CONTROL_END;
+         break;
+      case SDLK_ESCAPE:
+         SETBIT(control_status, CONTROL_EXIT);
+         control_last = CONTROL_EXIT;
+         break;
+      case SDLK_SPACE:
+         SETBIT(control_status, CONTROL_FIRE);
+         control_last = CONTROL_FIRE;
+         break;
    }
 }
 
 static void retro_key_up(unsigned short key)
 {
-   if (key == SDLK_UP)
+   switch (key)
    {
-      CLRBIT(control_status, CONTROL_UP);
-      control_last = CONTROL_UP;
+      case SDLK_UP:
+         CLRBIT(control_status, CONTROL_UP);
+         control_last = CONTROL_UP;
+         break;
+      case SDLK_DOWN:
+         CLRBIT(control_status, CONTROL_DOWN);
+         control_last = CONTROL_DOWN;
+         break;
+      case SDLK_LEFT:
+         CLRBIT(control_status, CONTROL_LEFT);
+         control_last = CONTROL_LEFT;
+         break;
+      case SDLK_RIGHT:
+         CLRBIT(control_status, CONTROL_RIGHT);
+         control_last = CONTROL_RIGHT;
+         break;
+      case SDLK_p:
+         CLRBIT(control_status, CONTROL_PAUSE);
+         control_last = CONTROL_PAUSE;
+         break;
+      case SDLK_e:
+         CLRBIT(control_status, CONTROL_END);
+         control_last = CONTROL_END;
+         break;
+      case SDLK_ESCAPE:
+         CLRBIT(control_status, CONTROL_EXIT);
+         control_last = CONTROL_EXIT;
+         break;
+      case SDLK_SPACE:
+         CLRBIT(control_status, CONTROL_FIRE);
+         control_last = CONTROL_FIRE;
+         break;
    }
-   else if (key == SDLK_DOWN)
-   {
-      CLRBIT(control_status, CONTROL_DOWN);
-      control_last = CONTROL_DOWN;
-   }
-   else if (key == SDLK_LEFT)
-   {
-      CLRBIT(control_status, CONTROL_LEFT);
-      control_last = CONTROL_LEFT;
-   }
-   else if (key == SDLK_RIGHT)
-   {
-      CLRBIT(control_status, CONTROL_RIGHT);
-      control_last = CONTROL_RIGHT;
-   }
-   else if (key == SDLK_p)
-   {
-      CLRBIT(control_status, CONTROL_PAUSE);
-      control_last = CONTROL_PAUSE;
-   }
-   else if (key == SDLK_e)
-   {
-      CLRBIT(control_status, CONTROL_END);
-      control_last = CONTROL_END;
-   }
-   else if (key == SDLK_ESCAPE)
-   {
-      CLRBIT(control_status, CONTROL_EXIT);
-      control_last = CONTROL_EXIT;
-   }
-   else if (key  == SDLK_SPACE)
-   {
-      CLRBIT(control_status, CONTROL_FIRE);
-      control_last = CONTROL_FIRE;
-   }
-
 }
 
 #include "sdl-wrapper.c"
