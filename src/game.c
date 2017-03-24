@@ -214,6 +214,8 @@ game_run(void)
 	game_state  = XRICK;
 }
 
+extern void blit(void);
+
 void game_iterate(void)
 {
    /* video */

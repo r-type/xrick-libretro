@@ -2,6 +2,9 @@
 
 #include "libretro-core.h"
 
+#include "game.h"
+#include "system.h"
+
 int VIRTUAL_WIDTH ;
 int retrow=320; 
 int retroh=200;
@@ -172,6 +175,9 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 {
    video_cb = cb;
 }
+
+extern int Retro_PollEvent(void);
+extern void syssnd_callback(U8 *stream, int len);
 
 void retro_run(void)
 {

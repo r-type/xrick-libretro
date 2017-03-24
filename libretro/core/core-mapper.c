@@ -87,6 +87,8 @@ long GetTicks(void)
 
 } 
 
+extern void SDL_Uninit(void);
+
 void texture_uninit(void)
 {
    SDL_Uninit();
