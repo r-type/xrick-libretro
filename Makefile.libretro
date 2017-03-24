@@ -86,18 +86,6 @@ CPPFLAGS += $(CFLAGS)
 
 #START COMMON PART
 
-LIBCOOBJ = $(LIBRETRO)/core/libco
-LIBCO_SRCS = $(LIBCOOBJ)/libco.o 
-
-ifeq ($(platform),android)
-LIBCO_SRCS += $(LIBCOOBJ)/armeabi_asm.o
-else
-UNAME_M := $(shell uname -m)
-ifneq ($(filter arm%,$(UNAME_M)),)
-LIBCO_SRCS += $(LIBCOOBJ)/armeabi_asm.o	
-endif
-endif
-
 EMU = ./src
 
 XOBJECTS = $(EMU)/unzip.o $(EMU)/data.o $(EMU)/scr_xrick.o $(EMU)/scr_pause.o $(EMU)/scr_imain.o $(EMU)/scr_imap.o\
@@ -110,7 +98,7 @@ XOBJECTS = $(EMU)/unzip.o $(EMU)/data.o $(EMU)/scr_xrick.o $(EMU)/scr_pause.o $(
 	 $(EMU)/control.o $(EMU)/system.o $(EMU)/scroller.o $(EMU)/sysevt.o $(EMU)/sysarg.o $(EMU)/syssnd.o \
 	 $(EMU)/sysjoy.o $(EMU)/dat_snd.o
 
-BUILD_APP =  $(XOBJECTS) $(LIBCO_SRCS) $(LIBRETRO)/sdl_wrapp/sdl_primitives.o $(LIBRETRO)/sdl_wrapp/bmp.o
+BUILD_APP =  $(XOBJECTS) $(LIBRETRO)/sdl_wrapp/sdl_primitives.o $(LIBRETRO)/sdl_wrapp/bmp.o
 
 HINCLUDES := -I$(EMU)  -I$(EMU)/../include \
 	-I. -I$(LIBRETRO) -I$(LIBRETRO)/core -I$(LIBRETRO)/sdl_wrapp \

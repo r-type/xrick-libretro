@@ -181,15 +181,10 @@ sysvid_shutdown(void)
 }
 
 extern SDL_Surface *sdlscrn; 
-#include "libco/libco.h"
-extern cothread_t mainThread;
-extern cothread_t emuThread;
-#define Retro_Flip(a) do{ co_switch(mainThread); }while(0);
 
 void blit(void)
 {
    SDL_BlitSurface(screen, NULL, sdlscrn, NULL);
-   Retro_Flip(a);
 }
 /*
  * Update screen

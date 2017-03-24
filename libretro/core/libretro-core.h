@@ -24,12 +24,6 @@ extern unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #define PIXEL_TYPE uint32_t 
 #endif 
 
-
-#include "libco/libco.h"
-
-extern cothread_t mainThread;
-extern cothread_t emuThread;
-
 extern char Key_Sate[512];
 extern char Key_Sate2[512];
 

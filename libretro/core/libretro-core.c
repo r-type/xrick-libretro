@@ -2,9 +2,6 @@
 
 #include "libretro-core.h"
 
-cothread_t mainThread;
-cothread_t emuThread;
-
 int VIRTUAL_WIDTH ;
 int retrow=320; 
 int retroh=200;
@@ -71,21 +68,6 @@ static void update_variables(void)
 
 static void retro_wrap_emulator(void)
 {    
-   SND=1;
-   sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0",retro_system_directory);
-   pre_main(RPATH);
-
-   environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, 0); 
-
-   // Were done here
-   co_switch(mainThread);
-
-   // Dead emulator, but libco says not to return
-   while(true)
-   {
-      LOGI("Running a dead emulator.");
-      co_switch(mainThread);
-   }
 }
 
 void retro_reset(void)
@@ -137,25 +119,12 @@ void retro_init(void)
    memset(Key_Sate,0,512);
    memset(Key_Sate2,0,512);
 
-   if(!emuThread && !mainThread)
-   {
-      mainThread = co_active();
-      emuThread = co_create(65536*sizeof(void*), retro_wrap_emulator);
-   }
    texture_init();
 }
 
 void retro_deinit(void)
 {	 
    texture_uninit();
-
-   if(emuThread)
-   {	 
-      co_delete(emuThread);
-      emuThread = 0;
-   }
-
-   LOGI("Retro DeInit\n");
 }
 
 unsigned retro_api_version(void)
@@ -213,14 +182,13 @@ void retro_run(void)
 
    Retro_PollEvent();
 
+   game_iterate();
+
    if(SND==1)
       syssnd_callback(NULL,441*2);			
 
    if(sdlscrn)
       video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
-
-   co_switch(emuThread);
-
 }
 
 bool retro_load_game(const struct retro_game_info *info)
@@ -237,11 +205,21 @@ bool retro_load_game(const struct retro_game_info *info)
    sdlscrn = SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT ,32, 0);
 #endif
 
+   SND=1;
+   sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0",retro_system_directory);
+   pre_main(RPATH);
+	game_run();
+
    return true;
 }
 
+void freedata(void);
+
 void retro_unload_game(void)
 {
+	freedata(); /* free cached data */
+	data_closepath();
+	sys_shutdown();
 }
 
 unsigned retro_get_region(void)
