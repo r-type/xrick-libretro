@@ -114,6 +114,8 @@ int pre_main(const char *argv)
    skel_main(PARAMCOUNT,( char **)xargv_cmd); 
 
    xargv_cmd[PARAMCOUNT - 2] = NULL;
+
+   return 0;
 }
 
 
