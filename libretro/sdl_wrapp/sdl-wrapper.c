@@ -241,6 +241,8 @@ int Retro_SetColorKey(SDL_Surface *surface, Uint32 flag, Uint32 key)
       surface->format->colorkey=key;
       surface->flags|=SDL_SRCCOLORKEY;
    }
+
+   return 0;
 }
 
 
