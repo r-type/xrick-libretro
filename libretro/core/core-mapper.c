@@ -103,22 +103,22 @@ void texture_init(void)
 
 static void retro_key_down(unsigned short key)
 {
-   if (key == syskbd_up || key == SDLK_UP)
+   if (key == SDLK_UP)
    {
       SETBIT(control_status, CONTROL_UP);
       control_last = CONTROL_UP;
    }
-   else if (key == syskbd_down || key == SDLK_DOWN)
+   else if (key == SDLK_DOWN)
    {
       SETBIT(control_status, CONTROL_DOWN);
       control_last = CONTROL_DOWN;
    }
-   else if (key == syskbd_left || key == SDLK_LEFT)
+   else if (key == SDLK_LEFT)
    {
       SETBIT(control_status, CONTROL_LEFT);
       control_last = CONTROL_LEFT;
    }
-   else if (key == syskbd_right || key == SDLK_RIGHT)
+   else if (key == SDLK_RIGHT)
    {
       SETBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
@@ -147,22 +147,22 @@ static void retro_key_down(unsigned short key)
 
 static void retro_key_up(unsigned short key)
 {
-   if (key == syskbd_up || key == SDLK_UP)
+   if (key == SDLK_UP)
    {
       CLRBIT(control_status, CONTROL_UP);
       control_last = CONTROL_UP;
    }
-   else if (key == syskbd_down || key == SDLK_DOWN)
+   else if (key == SDLK_DOWN)
    {
       CLRBIT(control_status, CONTROL_DOWN);
       control_last = CONTROL_DOWN;
    }
-   else if (key == syskbd_left || key == SDLK_LEFT)
+   else if (key == SDLK_LEFT)
    {
       CLRBIT(control_status, CONTROL_LEFT);
       control_last = CONTROL_LEFT;
    }
-   else if (key == syskbd_right || key == SDLK_RIGHT)
+   else if (key == SDLK_RIGHT)
    {
       CLRBIT(control_status, CONTROL_RIGHT);
       control_last = CONTROL_RIGHT;
