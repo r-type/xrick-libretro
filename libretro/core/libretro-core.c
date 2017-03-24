@@ -293,13 +293,13 @@ static void keyboard_cb(bool down, unsigned keycode,
       uint32_t character, uint16_t mod)
 {
    //logging.log(RETRO_LOG_INFO, "Down: %s, Code: %d, Char: %u, Mod: %u.\n",
-     //    down ? "yes" : "no", keycode, character, mod);
+   //    down ? "yes" : "no", keycode, character, mod);
 
-/*
-if(down)lastdown=keycode;
-else lastup=keycode;
-lastchar=character;
-*/
+   /*
+      if(down)lastdown=keycode;
+      else lastup=keycode;
+      lastchar=character;
+      */
 }
 #endif
 
@@ -309,16 +309,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
    (void)info;
 
-#if 0
-   struct retro_keyboard_callback cb = { keyboard_cb };
-   environ_cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, &cb);
-#endif
-
    full_path = info->path;
-
-#if 0
-   strcpy(RPATH,full_path);
-#endif
 
    update_variables();
 
