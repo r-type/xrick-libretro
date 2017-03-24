@@ -202,8 +202,6 @@ game_stopmusic(void)
 }
 #endif
 
-static U32 tm;
-
 /*
  * Main loop
  */
@@ -214,19 +212,10 @@ game_run(void)
 
 	game_period = sysarg_args_period ? sysarg_args_period : GAME_PERIOD;
 	game_state  = XRICK;
-   tm          = sys_gettime();
 }
 
 void game_iterate(void)
 {
-   /* timer */
-   U32 tmx       = tm;
-   tm            = sys_gettime();
-   tmx           = tm - tmx;
-
-   if (tmx < game_period)
-      sys_sleep(game_period - tmx);
-
    /* video */
    /*DEBUG*//*game_rects=&draw_SCREENRECT;*//*DEBUG*/
    sysvid_update(game_rects);
