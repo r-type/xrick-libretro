@@ -57,7 +57,7 @@ void retro_set_environment(retro_environment_t cb)
    struct retro_variable variables[] = {
       {
          "Skel_resolution",
-	 "Internal resolution; 640x480|832x576|800x600|960x720|1024x768|1024x1024",
+         "Internal resolution; 640x480|832x576|800x600|960x720|1024x768|1024x1024",
       },
       { NULL, NULL },
    };
@@ -87,8 +87,8 @@ static void update_variables(void)
       if (pch)
          retroh = strtoul(pch, NULL, 0);
 
-retrow=WINDOW_WIDTH;
-retroh=WINDOW_HEIGHT;
+      retrow=WINDOW_WIDTH;
+      retroh=WINDOW_HEIGHT;
 
       fprintf(stderr, "[libretro-test]: Got size: %u x %u.\n", retrow, retroh);
 
@@ -100,7 +100,7 @@ retroh=WINDOW_HEIGHT;
 
 }
 
-static void retro_wrap_emulator()
+static void retro_wrap_emulator(void)
 {    
    SND=1;
    sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0",retro_system_directory);
@@ -119,31 +119,6 @@ static void retro_wrap_emulator()
       LOGI("Running a dead emulator.");
       co_switch(mainThread);
    }
-}
-
-static void Emu_init(void)
-{
-   update_variables();
-
-   memset(Key_Sate,0,512);
-   memset(Key_Sate2,0,512);
-
-   if(!emuThread && !mainThread)
-   {
-      mainThread = co_active();
-      emuThread = co_create(65536*sizeof(void*), retro_wrap_emulator);
-   }
-}
-
-static void Emu_uninit(void)
-{
-   texture_uninit();
-}
-
-void retro_shutdown_core(void)
-{
-   texture_uninit();
-   environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
 }
 
 void retro_reset(void)
@@ -194,13 +169,22 @@ void retro_init(void)
       exit(0);
    }
 
-   Emu_init();
+   update_variables();
+
+   memset(Key_Sate,0,512);
+   memset(Key_Sate2,0,512);
+
+   if(!emuThread && !mainThread)
+   {
+      mainThread = co_active();
+      emuThread = co_create(65536*sizeof(void*), retro_wrap_emulator);
+   }
    texture_init();
 }
 
 void retro_deinit(void)
 {	 
-   Emu_uninit(); 
+   texture_uninit();
 
    if(emuThread)
    {	 
@@ -274,8 +258,7 @@ void retro_run(void)
          syssnd_callback(NULL,441*2);			
    }   
 
-
-   if(sdlscrn/*->pixels*/!=NULL)
+   if(sdlscrn)
       video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
 
    co_switch(emuThread);
