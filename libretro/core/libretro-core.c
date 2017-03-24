@@ -134,8 +134,6 @@ void retro_init(void)
       exit(0);
    }
 
-   update_variables();
-
    memset(Key_Sate,0,512);
    memset(Key_Sate2,0,512);
 
@@ -243,11 +241,7 @@ static void keyboard_cb(bool down, unsigned keycode,
 
 bool retro_load_game(const struct retro_game_info *info)
 {
-   const char *full_path;
-
-   (void)info;
-
-   full_path = info->path;
+   const char *full_path = info->path;
 
    update_variables();
 
