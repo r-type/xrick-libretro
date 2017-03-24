@@ -42,15 +42,11 @@ const char *retro_content_directory;
 
 #include "cmdline.c"
 
-extern void update_input(void);
 extern void texture_init(void);
 extern void texture_uninit(void);
-extern void Emu_init();
-extern void Emu_uninit();
-extern void input_gui(void);
 
 static retro_video_refresh_t video_cb;
-/*static*/ retro_audio_sample_t audio_cb;
+retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 static retro_environment_t environ_cb;
 
@@ -125,7 +121,7 @@ static void retro_wrap_emulator()
    }
 }
 
-void Emu_init(void)
+static void Emu_init(void)
 {
    update_variables();
 
@@ -140,7 +136,7 @@ void Emu_init(void)
 
 }
 
-void Emu_uninit(void)
+static void Emu_uninit(void)
 {
    texture_uninit();
 }
