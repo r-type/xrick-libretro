@@ -218,6 +218,12 @@ int Retro_PollEvent(void)
    Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START) ? 0x80: 0;
    key_latch(key);
 
+#if 0
+   key           = SDLK_e;
+   Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT) ? 0x80: 0;
+   key_latch(key);
+#endif
+
    key           = SDLK_SPACE;
    Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A) ? 0x80: 0;
    key_latch(key);
