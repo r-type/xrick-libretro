@@ -21,24 +21,16 @@ SDL_Surface *sdlscrn;
 
 void SDL_Uninit(void)
 {
-   printf("free gVar.pScreen\n");
-
-printf("free surf format palette color\n");
-
    if(sdlscrn->format->palette->colors)	
       free(sdlscrn->format->palette->colors);
 
-printf("free surf format palette \n");
    if(sdlscrn->format->palette)	
       free(sdlscrn->format->palette);
-printf("free surf format  \n");
    if(sdlscrn->format)	
       free(sdlscrn->format);
 
-printf("free surf pixel  \n"); 
-   if(sdlscrn->pixels)sdlscrn->pixels=NULL;
-   
-printf("free surf  \n"); 
+   if(sdlscrn->pixels)
+      sdlscrn->pixels=NULL;
 
    if(sdlscrn)	
       free(sdlscrn);
@@ -133,12 +125,8 @@ static void retro_wrap_emulator()
    }
 }
 
-void Emu_init(){
-
-#ifdef RETRO_AND
-   MOUSEMODE=1;
-#endif
-
+void Emu_init(void)
+{
    update_variables();
 
    memset(Key_Sate,0,512);
@@ -152,65 +140,57 @@ void Emu_init(){
 
 }
 
-void Emu_uninit(){
+void Emu_uninit(void)
+{
    texture_uninit();
 }
 
 void retro_shutdown_core(void)
 {
-   printf("SHUTDOWN\n");
    texture_uninit();
    environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
 }
 
-void retro_reset(void){
-
+void retro_reset(void)
+{
 }
 
 void retro_init(void)
 {    	
-   const char *system_dir = NULL;
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_dir) && system_dir)
-   {
-      // if defined, use the system directory			
-      retro_system_directory=system_dir;		
-   }		   
-
+   const char *system_dir  = NULL;
    const char *content_dir = NULL;
+   const char *save_dir    = NULL;
 
+   // if defined, use the system directory			
+   if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_dir) && system_dir)
+      retro_system_directory=system_dir;		
+
+   // if defined, use the system directory			
    if (environ_cb(RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY, &content_dir) && content_dir)
-   {
-      // if defined, use the system directory			
       retro_content_directory=content_dir;		
-   }			
 
-   const char *save_dir = NULL;
-
+   // If save directory is defined use it, otherwise use system directory
    if (environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_dir) && save_dir)
-   {
-      // If save directory is defined use it, otherwise use system directory
       retro_save_directory = *save_dir ? save_dir : retro_system_directory;      
-   }
    else
-   {
       // make retro_save_directory the same in case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY is not implemented by the frontend
       retro_save_directory=retro_system_directory;
-   }
 
-   if(retro_system_directory==NULL)sprintf(RETRO_DIR, "%s\0",".");
-   else sprintf(RETRO_DIR, "%s\0", retro_system_directory);
+   if(retro_system_directory==NULL)
+      sprintf(RETRO_DIR, "%s\0",".");
+   else
+      sprintf(RETRO_DIR, "%s\0", retro_system_directory);
 
    printf("Retro SYSTEM_DIRECTORY %s\n",retro_system_directory);
    printf("Retro SAVE_DIRECTORY %s\n",retro_save_directory);
    printf("Retro CONTENT_DIRECTORY %s\n",retro_content_directory);
 
 #ifndef RENDER16B
-    	enum retro_pixel_format fmt =RETRO_PIXEL_FORMAT_XRGB8888;
-retrob=4;
+   enum retro_pixel_format fmt =RETRO_PIXEL_FORMAT_XRGB8888;
+   retrob=4;
 #else
-    	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
-retrob=2;
+   enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
+   retrob=2;
 #endif
    
    if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
@@ -291,25 +271,22 @@ void retro_run(void)
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       update_variables();
 
-   if(pauseg==0){
-
+   if(pauseg==0)
+   {
       Retro_PollEvent();
 
-      if(SND==1){
-		syssnd_callback(NULL,441*2);			
-      }	
-
+      if(SND==1)
+         syssnd_callback(NULL,441*2);			
    }   
 
 
-   if(sdlscrn/*->pixels*/!=NULL){
-	
-	video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
-   }
+   if(sdlscrn/*->pixels*/!=NULL)
+      video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
 
    co_switch(emuThread);
 
 }
+
 #if 0
 unsigned int lastdown,lastup,lastchar;
 static void keyboard_cb(bool down, unsigned keycode,
@@ -331,26 +308,28 @@ bool retro_load_game(const struct retro_game_info *info)
    const char *full_path;
 
    (void)info;
-/*
+
+#if 0
    struct retro_keyboard_callback cb = { keyboard_cb };
    environ_cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, &cb);
-*/
+#endif
+
    full_path = info->path;
 
-   //strcpy(RPATH,full_path);
+#if 0
+   strcpy(RPATH,full_path);
+#endif
 
    update_variables();
 
 #ifdef RENDER16B
-	memset(Retro_Screen,0,1600*1200*2);
-	//sdlscrn =NULL;	
- SDL_SetVideoMode(/*retrow,retroh*/WINDOW_WIDTH,WINDOW_HEIGHT, 16, 0);
-retrob=2;
+   memset(Retro_Screen,0,1600*1200*2);
+   SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT, 16, 0);
+   retrob=2;
 #else
-	memset(Retro_Screen,0,1600*1200*2*2);
-	//sdlscrn=NULL;
-	sdlscrn = SDL_SetVideoMode(/*retrow,retroh,*/WINDOW_WIDTH,WINDOW_HEIGHT ,32, 0);
-retrob=4;
+   memset(Retro_Screen,0,1600*1200*2*2);
+   sdlscrn = SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT ,32, 0);
+   retrob=4;
 #endif
 
    return true;
