@@ -1,5 +1,8 @@
 
-int Retro_SetColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors){}
+int Retro_SetColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors)
+{
+   return 0;
+}
 
 int Retro_SetPalette(SDL_Surface * surface, int flags, const SDL_Color * colors,int firstcolor, int ncolors)
 {
