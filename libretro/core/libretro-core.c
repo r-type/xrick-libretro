@@ -190,9 +190,6 @@ void retro_run(void)
 
    game_iterate();
 
-   if(SND==1)
-      syssnd_callback(NULL,441*2);			
-
    if(sdlscrn)
       video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
 }
