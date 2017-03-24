@@ -21,19 +21,28 @@ ifeq ($(platform), android)
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED :=  -Wl,--fix-cortex-a8 -llog -lz -shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
-   PLATFLAGS := -DAND -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
+   PLATFLAGS := -DAND -DALIGN_DWORD  -D__LIBRETRO__
 
 else ifeq ($(platform), unix)
    CC = gcc
  TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED :=  -lz -shared -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined
-   PLATFLAGS := -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
-else ifeq ($(platform), osx)
+   PLATFLAGS := -DALIGN_DWORD  -D__LIBRETRO__
+
+# OS X
+else ifneq (,$(findstring osx,$(platform)))
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
-   PLATFLAGS := -DLSB_FIRST -DALIGN_DWORD  -D__LIBRETRO__
+   PLATFLAGS := -DALIGN_DWORD  -D__LIBRETRO__
+
+# iOS
+else ifneq (,$(findstring ios,$(platform)))
+   TARGET := $(TARGET_NAME)_libretro.dylib
+   fpic := -fPIC
+   SHARED := -dynamiclib
+   PLATFLAGS := -DALIGN_DWORD  -D__LIBRETRO__
 
 else ifeq ($(platform), wii)
    TARGET := $(TARGET_NAME)_libretro_wii.a
@@ -43,7 +52,7 @@ else ifeq ($(platform), wii)
 	BAKE_IN_ZLIB=1
    CFLAGS += -DSDL_BYTEORDER=SDL_BIG_ENDIAN -DMSB_FIRST -DBYTE_ORDER=BIG_ENDIAN  -DBYTE_ORDER=BIG_ENDIAN \
 	-DHAVE_ASPRINTF -I$(DEVKITPRO)/libogc/include \
-	-D__powerpc__ -D__POWERPC__ -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__
+	-D__powerpc__ -D__POWERPC__ -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float -D__ppc__ -DMSB_FIRST
    SHARED :=   -lm -lc
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD
 
@@ -55,13 +64,13 @@ else ifeq ($(platform), ps3)
 	BAKE_IN_ZLIB=1
    SHARED :=   -lm -lc
    CFLAGS += -DSDL_BYTEORDER=SDL_BIG_ENDIAN -DMSB_FIRST -DBYTE_ORDER=BIG_ENDIAN  -DBYTE_ORDER=BIG_ENDIAN \
-	-D__CELLOS_LV2 -DHAVE_ASPRINTF
+	-D__CELLOS_LV2 -DHAVE_ASPRINTF -DMSB_FIRST
    PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD 
 
 else
    #CC = i586-mingw32msvc-gcc
    CC = x86_64-w64-mingw32-gcc
-   PLATFLAGS :=  -D__LIBRETRO__ -DLSB_FIRST -DALIGN_DWORD -DWIN32PORT -DWIN32
+   PLATFLAGS :=  -D__LIBRETRO__ -DALIGN_DWORD -DWIN32PORT -DWIN32
    TARGET := $(TARGET_NAME)_libretro.dll
    SHARED := -shared -static-libgcc -s -Wl,--version-script=$(CORE_DIR)/libretro/core/link.T -Wl,--no-undefined 
 endif
