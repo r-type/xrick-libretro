@@ -36,9 +36,7 @@ unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 char RPATH[512];
 
 //EMU FLAGS
-int MAXPAS=6,PAS=4;
 int SND; //SOUND ON/OFF
-static int firstps=0;
 
 //JOY
 int al[2][2];//left analog1
@@ -198,8 +196,8 @@ static void retro_key_up(unsigned short retrok)
 
 #include "sdl-wrapper.c"
 
-int bitstart=0;
-int keydown=0,keyup=0;
+static int bitstart=0;
+static int keydown=0,keyup=0;
 int SurfaceFormat=3;
 
 int Retro_PollEvent(void)
