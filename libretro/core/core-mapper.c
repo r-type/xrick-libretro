@@ -185,23 +185,23 @@ int SurfaceFormat=3;
 
 int Retro_PollEvent(void)
 {
-   int i;
+   unsigned short key;
 
    input_poll_cb();
 
-   for(i=0;i<320;i++)
+   for(key = 0; key < 320; key++)
    {
-      Key_Sate[i]=input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0,i) ? 0x80: 0;
+      Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0, key) ? 0x80: 0;
 
-      if(Key_Sate[i]  && Key_Sate2[i]==0)
+      if(Key_Sate[key]  && Key_Sate2[key]==0)
       {
-         retro_key_down(i);
-         Key_Sate2[i]=1;
+         retro_key_down(key);
+         Key_Sate2[key] = 1;
       }
-      else if ( !Key_Sate[i] && Key_Sate2[i]==1 )
+      else if ( !Key_Sate[key] && Key_Sate2[key]==1 )
       {
-         retro_key_up( i );
-         Key_Sate2[i]=0;
+         retro_key_up(key);
+         Key_Sate2[key] = 0;
       }
    }
 
