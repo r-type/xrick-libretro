@@ -231,10 +231,7 @@ void game_iterate(void)
    /*snd_mix();*/
 
    /* events */
-   if (game_waitevt)
-      sysevt_wait();  /* wait for an event */
-   else
-      sysevt_poll();  /* process events (non-blocking) */
+   //sysevt_poll();  /* process events (non-blocking) */
 
    /* frame */
    frame();
