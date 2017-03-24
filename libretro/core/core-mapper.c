@@ -214,13 +214,6 @@ int Retro_PollEvent(void)
 
       if(Key_Sate[i]  && Key_Sate2[i]==0)
       {
-         SDL_keysym keysym;
-
-         keysym.scancode=i;
-         keysym.sym=i;
-         keysym.unicode=0;
-         keysym.mod=0;
-
          retro_key_down(i);
          Key_Sate2[i]=1;
          bitstart=1;
@@ -228,18 +221,10 @@ int Retro_PollEvent(void)
       }
       else if ( !Key_Sate[i] && Key_Sate2[i]==1 )
       {
-         SDL_keysym keysym;
-
-         keysym.scancode=i;
-         keysym.sym=i;
-         keysym.unicode=0;
-         keysym.mod=0;
-
          retro_key_up( i );
          Key_Sate2[i]=0;
          bitstart=0;
          keyup++;
-
       }
 
    }
