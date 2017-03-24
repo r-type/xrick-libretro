@@ -8,7 +8,7 @@
 int VIRTUAL_WIDTH ;
 int retrow=320; 
 int retroh=200;
-#ifdef RENDER16B
+#ifdef FRONTEND_SUPPORTS_RGB565
 #define BPP 2
 #else
 #define BPP 4
@@ -107,10 +107,10 @@ void retro_init(void)
    printf("Retro SAVE_DIRECTORY %s\n",retro_save_directory);
    printf("Retro CONTENT_DIRECTORY %s\n",retro_content_directory);
 
-#ifndef RENDER16B
-   enum retro_pixel_format fmt =RETRO_PIXEL_FORMAT_XRGB8888;
-#else
+#ifdef FRONTEND_SUPPORTS_RGB565
    enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
+#else
+   enum retro_pixel_format fmt =RETRO_PIXEL_FORMAT_XRGB8888;
 #endif
    
    if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
@@ -198,7 +198,7 @@ bool retro_load_game(const struct retro_game_info *info)
 {
    update_variables();
 
-#ifdef RENDER16B
+#ifdef FRONTEND_SUPPORTS_RGB565
    memset(Retro_Screen,0,WINDOW_WIDTH*WINDOW_HEIGHT*2);
    SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT, 16, 0);
 #else

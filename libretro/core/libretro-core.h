@@ -13,7 +13,7 @@
 #define WINDOW_WIDTH  320
 #define WINDOW_HEIGHT 240
 
-#ifdef  RENDER16B
+#ifdef FRONTEND_SUPPORTS_RGB565
 extern uint16_t Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #define PIXEL_BYTES 1
 #define PIXEL_TYPE uint16_t

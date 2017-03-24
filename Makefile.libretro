@@ -81,6 +81,7 @@ else
    CFLAGS += -O3
 endif
 
+#CFLAGS += -DFRONTEND_SUPPORTS_RGB565
 CFLAGS += -fsigned-char -Wno-strict-prototypes -ffast-math -fomit-frame-pointer -fno-builtin
 
 include $(CORE_DIR)/Makefile.common

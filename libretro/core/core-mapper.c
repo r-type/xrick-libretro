@@ -26,7 +26,7 @@ char RETRO_DIR[512];
 #define CLRBIT(x,b) x &= ~(b)
 
 //VIDEO
-#ifdef  RENDER16B
+#ifdef FRONTEND_SUPPORTS_RGB565
 uint16_t Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 #else
 unsigned int Retro_Screen[WINDOW_WIDTH*WINDOW_HEIGHT];
