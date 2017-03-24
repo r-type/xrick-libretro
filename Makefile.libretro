@@ -68,8 +68,7 @@ else
    CFLAGS += -O3
 endif
 
-CFLAGS += \
-	-std=gnu99 -finline-functions -funroll-loops  -fsigned-char  \
+CFLAGS += -fsigned-char  \
 	-Wno-strict-prototypes -ffast-math -fomit-frame-pointer -fno-strength-reduce  -fno-builtin -finline-functions -s
 
 include $(CORE_DIR)/Makefile.common
