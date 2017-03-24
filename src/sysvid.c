@@ -139,8 +139,6 @@ sysvid_init(void)
   U8 *mask, tpix;
   U32 len, i;
 
-  IFDEBUG_VIDEO(printf("xrick/video: start\n"););
-
   /* SDL */
   if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0)
     sys_panic("xrick/video: could not init SDL\n");
@@ -164,8 +162,6 @@ sysvid_init(void)
   sysvid_fb = malloc(SYSVID_WIDTH * SYSVID_HEIGHT);
   if (!sysvid_fb)
     sys_panic("xrick/video: sysvid_fb malloc failed\n");
-
-  IFDEBUG_VIDEO(printf("xrick/video: ready\n"););
 }
 
 /*
@@ -225,6 +221,7 @@ sysvid_update(rect_t *rects)
       p0 += SYSVID_WIDTH;
     }
 
+#if 0
     IFDEBUG_VIDEO2(
     for (y = rects->y; y < rects->y + rects->height; y++)
       for (yz = 0; yz < zoom; yz++) {
@@ -240,6 +237,7 @@ sysvid_update(rect_t *rects)
 	*(p + ((rects->height * zoom - 1) * zoom) * SYSVID_WIDTH) = 0x01;
       }
     );
+#endif
 
     area.x = rects->x * zoom;
     area.y = rects->y * zoom;

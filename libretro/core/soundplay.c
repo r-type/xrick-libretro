@@ -56,7 +56,6 @@ void syssnd_callback(U8 *stream, int len)
 
                if (channel[c].loop)
                {  /* just loop */
-                  IFDEBUG_AUDIO2(sys_printf("xrick/audio: channel %d - loop\n", c););
                   channel[c].buf = channel[c].snd->buf;
                   channel[c].len = channel[c].snd->len;
                   s += ADJVOL(*channel[c].buf - 0x80);
@@ -65,7 +64,6 @@ void syssnd_callback(U8 *stream, int len)
                }
                else
                {  /* end for real */
-                  IFDEBUG_AUDIO2(sys_printf("xrick/audio: channel %d - end\n", c););
                   end_channel(c);
                }
             }
@@ -181,14 +179,6 @@ S8 syssnd_play(sound_t *sound, S8 loop)
       c++;
    if (c == SYSSND_MIXCHANNELS)
       c = -1;
-
-   IFDEBUG_AUDIO(
-         if (channel[c].snd == sound && channel[c].loop != 0)
-         sys_printf("xrick/sound: already playing %s on channel %d - resetting\n",
-            sound->name, c);
-         else if (c >= 0)
-         sys_printf("xrick/sound: playing %s on channel %d\n", sound->name, c);
-         );
 
    if (c >= 0)
    {
