@@ -64,7 +64,6 @@ sys_printf(char *msg, ...)
   va_start(argptr, msg);
   vsprintf(s, msg, argptr);
   va_end(argptr);
-  printf(s);
 }
 
 /*
