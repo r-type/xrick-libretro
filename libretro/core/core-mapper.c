@@ -183,27 +183,45 @@ static void retro_key_up(unsigned short key)
 
 int SurfaceFormat=3;
 
+#define key_latch(key) \
+   if(Key_Sate[key]  && Key_Sate2[key]==0) \
+   { \
+      retro_key_down(key); \
+      Key_Sate2[key] = 1; \
+   } \
+   else if ( !Key_Sate[key] && Key_Sate2[key]==1 ) \
+   { \
+      retro_key_up(key); \
+      Key_Sate2[key] = 0; \
+   }
+
 int Retro_PollEvent(void)
 {
-   unsigned short key;
+   unsigned short key = 0;
 
    input_poll_cb();
 
-   for(key = 0; key < 320; key++)
-   {
-      Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0, key) ? 0x80: 0;
+   key           = SDLK_UP;
+   Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP) ? 0x80: 0;
+   key_latch(key);
+   key           = SDLK_DOWN;
+   Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN) ? 0x80: 0;
+   key_latch(key);
+   key           = SDLK_LEFT;
+   Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT) ? 0x80: 0;
+   key_latch(key);
+   key           = SDLK_RIGHT;
+   Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT) ? 0x80: 0;
+   key_latch(key);
 
-      if(Key_Sate[key]  && Key_Sate2[key]==0)
-      {
-         retro_key_down(key);
-         Key_Sate2[key] = 1;
-      }
-      else if ( !Key_Sate[key] && Key_Sate2[key]==1 )
-      {
-         retro_key_up(key);
-         Key_Sate2[key] = 0;
-      }
-   }
+   key           = SDLK_p;
+   Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START) ? 0x80: 0;
+   key_latch(key);
+
+   key           = SDLK_SPACE;
+   Key_Sate[key] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A) ? 0x80: 0;
+   key_latch(key);
+
 
    return 1;
 
