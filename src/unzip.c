@@ -22,14 +22,6 @@
 #   include <errno.h>
 #endif
 
-
-#ifndef local
-#  define local static
-#endif
-/* compile with -Dlocal if your debugger can't find static symbols */
-
-
-
 #if !defined(unix) && !defined(CASESENSITIVITYDEFAULT_YES) && \
                       !defined(CASESENSITIVITYDEFAULT_NO)
 #define CASESENSITIVITYDEFAULT_NO
@@ -44,16 +36,8 @@
 #define UNZ_MAXFILENAMEINZIP (256)
 #endif
 
-#ifndef ALLOC
-# define ALLOC(size) (malloc(size))
-#endif
-#ifndef TRYFREE
-# define TRYFREE(p) {if (p) free(p);}
-#endif
-
 #define SIZECENTRALDIRITEM (0x2e)
 #define SIZEZIPLOCALHEADER (0x1e)
-
 
 /* I've found an old Unix (a SunOS 4.1.3_U1) without all SEEK_* defined.... */
 
@@ -129,21 +113,18 @@ typedef struct
 
 unzFile unzDup(unzFile file)
 {
-	unz_s *x, *y;
-	unz_s t;
-
+	unz_s *y;
 	/* cast */
-	x=(unz_s*)file;
-
+	unz_s *x = (unz_s*)file;
 	/* copy */
-	t = *x;
+	unz_s  t = *x;
 
 	/* tweek */
 	t.file = fopen(x->filename, "rb");
 	t.pfile_in_zip_read = NULL;
 
 	/* cast & return */
-	y=(unz_s*)ALLOC(sizeof(unz_s));
+	y=(unz_s*)malloc(sizeof(unz_s));
 	*y=t;
 	unzGoToFirstFile((unzFile)y);
 	return (unzFile)y;
@@ -199,12 +180,9 @@ int unzlocal_getShort (FILE *fin, uLong *pX)
 
 int unzlocal_getLong (FILE *fin, uLong *pX)
 {
-   uLong x ;
    int i;
-   int err;
-
-   err = unzlocal_getByte(fin,&i);
-   x = (uLong)i;
+   int err = unzlocal_getByte(fin,&i);
+   uLong x = (uLong)i;
 
    if (err==UNZ_OK)
       err = unzlocal_getByte(fin,&i);
@@ -227,7 +205,7 @@ int unzlocal_getLong (FILE *fin, uLong *pX)
 
 
 /* My own strcmpi / strcasecmp */
-local int strcmpcasenosensitive_internal (const char *fileName1, const char *fileName2)
+static int strcmpcasenosensitive_internal (const char *fileName1, const char *fileName2)
 {
 	for (;;)
 	{
@@ -288,7 +266,7 @@ int unzStringFileNameCompare (
   Locate the Central directory of a zipfile (at the end, just before
     the global comment)
 */
-local uLong unzlocal_SearchCentralDir(FILE *fin)
+static uLong unzlocal_SearchCentralDir(FILE *fin)
 {
 	unsigned char* buf;
 	uLong uSizeFile;
@@ -305,7 +283,7 @@ local uLong unzlocal_SearchCentralDir(FILE *fin)
 	if (uMaxBack>uSizeFile)
 		uMaxBack = uSizeFile;
 
-	buf = (unsigned char*)ALLOC(BUFREADCOMMENT+4);
+	buf = (unsigned char*)malloc(BUFREADCOMMENT+4);
 	if (buf==NULL)
 		return 0;
 
@@ -339,7 +317,9 @@ local uLong unzlocal_SearchCentralDir(FILE *fin)
 		if (uPosFound!=0)
 			break;
 	}
-	TRYFREE(buf);
+
+   if (buf)
+      free(buf);
 	return uPosFound;
 }
 
@@ -440,7 +420,7 @@ unzFile unzOpen (const char *path)
     us.filename = path;
 
 
-	s=(unz_s*)ALLOC(sizeof(unz_s));
+	s=(unz_s*)malloc(sizeof(unz_s));
 	*s=us;
 	unzGoToFirstFile((unzFile)s);
 	return (unzFile)s;
@@ -463,7 +443,9 @@ int unzClose (unzFile file)
         unzCloseCurrentFile(file);
 
 	fclose(s->file);
-	TRYFREE(s);
+
+   if (s)
+      free(s);
 	return UNZ_OK;
 }
 
@@ -486,7 +468,7 @@ int unzGetGlobalInfo (unzFile file, unz_global_info *pglobal_info)
 /*
    Translate date/time from Dos format to tm_unz (readable more easilty)
 */
-local void unzlocal_DosDateToTmuDate (uLong ulDosDate, tm_unz *ptm)
+static void unzlocal_DosDateToTmuDate (uLong ulDosDate, tm_unz *ptm)
 {
     uLong uDate;
     uDate = (uLong)(ulDosDate>>16);
@@ -502,7 +484,7 @@ local void unzlocal_DosDateToTmuDate (uLong ulDosDate, tm_unz *ptm)
 /*
   Get Info about the current file in the zipfile, with internal only info
 */
-local int unzlocal_GetCurrentFileInfoInternal OF((unzFile file,
+static int unzlocal_GetCurrentFileInfoInternal OF((unzFile file,
                                                   unz_file_info *pfile_info,
                                                   unz_file_info_internal
                                                   *pfile_info_internal,
@@ -513,7 +495,7 @@ local int unzlocal_GetCurrentFileInfoInternal OF((unzFile file,
                                                   char *szComment,
 												  uLong commentBufferSize));
 
-local int unzlocal_GetCurrentFileInfoInternal (file,
+static int unzlocal_GetCurrentFileInfoInternal (file,
                                               pfile_info,
                                               pfile_info_internal,
                                               szFileName, fileNameBufferSize,
@@ -811,13 +793,11 @@ int unzLocateFile (
   store in *piSizeVar the size of extra info in local header
         (filename and size of extra field data)
 */
-local int unzlocal_CheckCurrentFileCoherencyHeader (s,piSizeVar,
-													poffset_local_extrafield,
-													psize_local_extrafield)
-	unz_s* s;
-	uInt* piSizeVar;
-	uLong *poffset_local_extrafield;
-	uInt  *psize_local_extrafield;
+static int unzlocal_CheckCurrentFileCoherencyHeader (
+      unz_s *s,
+      uInt *piSizeVar,
+      uLong *poffset_local_extrafield,
+      uInt *psize_local_extrafield)
 {
 	uLong uMagic,uData,uFlags;
 	uLong size_filename;
@@ -927,18 +907,19 @@ int unzOpenCurrentFile (unzFile file)
 		return UNZ_BADZIPFILE;
 
 	pfile_in_zip_read_info = (file_in_zip_read_info_s*)
-									    ALLOC(sizeof(file_in_zip_read_info_s));
+									    malloc(sizeof(file_in_zip_read_info_s));
 	if (pfile_in_zip_read_info==NULL)
 		return UNZ_INTERNALERROR;
 
-	pfile_in_zip_read_info->read_buffer=(char*)ALLOC(UNZ_BUFSIZE);
+	pfile_in_zip_read_info->read_buffer=(char*)malloc(UNZ_BUFSIZE);
 	pfile_in_zip_read_info->offset_local_extrafield = offset_local_extrafield;
 	pfile_in_zip_read_info->size_local_extrafield = size_local_extrafield;
 	pfile_in_zip_read_info->pos_local_extrafield=0;
 
 	if (pfile_in_zip_read_info->read_buffer==NULL)
 	{
-		TRYFREE(pfile_in_zip_read_info);
+      if (pfile_in_zip_read_info)
+         free(pfile_in_zip_read_info);
 		return UNZ_INTERNALERROR;
 	}
 
@@ -1245,13 +1226,16 @@ int unzCloseCurrentFile (unzFile file)
 	}
 
 
-	TRYFREE(pfile_in_zip_read_info->read_buffer);
+   if (pfile_in_zip_read_info->read_buffer)
+      free(pfile_in_zip_read_info->read_buffer);
 	pfile_in_zip_read_info->read_buffer = NULL;
 	if (pfile_in_zip_read_info->stream_initialised)
 		inflateEnd(&pfile_in_zip_read_info->stream);
 
 	pfile_in_zip_read_info->stream_initialised = 0;
-	TRYFREE(pfile_in_zip_read_info);
+
+   if (pfile_in_zip_read_info)
+      free(pfile_in_zip_read_info);
 
     s->pfile_in_zip_read=NULL;
 
