@@ -484,7 +484,7 @@ static void unzlocal_DosDateToTmuDate (uLong ulDosDate, tm_unz *ptm)
 /*
   Get Info about the current file in the zipfile, with internal only info
 */
-static int unzlocal_GetCurrentFileInfoInternal OF((unzFile file,
+static int unzlocal_GetCurrentFileInfoInternal (unzFile file,
                                                   unz_file_info *pfile_info,
                                                   unz_file_info_internal
                                                   *pfile_info_internal,
@@ -493,7 +493,7 @@ static int unzlocal_GetCurrentFileInfoInternal OF((unzFile file,
                                                   void *extraField,
 												  uLong extraFieldBufferSize,
                                                   char *szComment,
-												  uLong commentBufferSize));
+												  uLong commentBufferSize);
 
 static int unzlocal_GetCurrentFileInfoInternal (file,
                                               pfile_info,
@@ -984,7 +984,7 @@ int unzOpenCurrentFile (unzFile file)
   return <0 with error code if there is an error
     (UNZ_ERRNO for IO error, or zLib error for uncompress error)
 */
-int unzReadCurrentFile  (unzFile file, voidp buf, unsigned len)
+int unzReadCurrentFile  (unzFile file, void *buf, unsigned len)
 {
 	int err=UNZ_OK;
 	uInt iRead = 0;
@@ -1160,7 +1160,7 @@ int unzeof (unzFile file)
   the return value is the number of bytes copied in buf, or (if <0)
 	the error code
 */
-int unzGetLocalExtrafield (unzFile file, voidp buf, unsigned len)
+int unzGetLocalExtrafield (unzFile file, void *buf, unsigned len)
 {
 	unz_s* s;
 	file_in_zip_read_info_s* pfile_in_zip_read_info;

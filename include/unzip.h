@@ -49,15 +49,7 @@ extern "C" {
 #include "zlib.h"
 #endif
 
-#if defined(STRICTUNZIP) || defined(STRICTZIPUNZIP)
-/* like the STRICT of WIN32, we define a pointer that cannot be converted
-    from (void*) without cast */
-typedef struct TagunzFile__ { int unused; } unzFile__; 
-typedef unzFile__ *unzFile;
-#else
-typedef voidp unzFile;
-#endif
-
+typedef void *unzFile;
 
 #define UNZ_OK                                  (0)
 #define UNZ_END_OF_LIST_OF_FILE (-100)
@@ -231,7 +223,7 @@ extern int  unzCloseCurrentFile (unzFile file);
 
 												
 extern int  unzReadCurrentFile (unzFile file, 
-					  voidp buf,
+					  void *buf,
 					  unsigned len);
 /*
   Read bytes from the current file (opened by unzOpenCurrentFile)
@@ -255,7 +247,7 @@ extern int  unzeof (unzFile file);
 */
 
 extern int  unzGetLocalExtrafield (unzFile file,
-											 voidp buf,
+											 void *buf,
 											 unsigned len);
 /*
   Read extra field from the current file (opened by unzOpenCurrentFile)
