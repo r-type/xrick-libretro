@@ -49,8 +49,6 @@ SOURCES_C := \
 	$(CORE_DIR)/libretro/core/libretro-core.c \
 	$(CORE_DIR)/libretro/core/core-mapper.c
 
-SOURCES_C :=
-
 ifeq ($(STATIC_LINKING),1)
 else
 SOURCES_C += \
