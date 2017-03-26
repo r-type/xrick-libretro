@@ -2,18 +2,19 @@
 
 #include "libretro-core.h"
 
-cothread_t mainThread;
-cothread_t emuThread;
+#include "game.h"
+#include "system.h"
 
-int CROP_WIDTH;
-int CROP_HEIGHT;
 int VIRTUAL_WIDTH ;
-int retrow=1024; 
-int retroh=1024;
-int retrob=4;
+int retrow=320; 
+int retroh=200;
+#ifdef FRONTEND_SUPPORTS_RGB565
+#define BPP 2
+#else
+#define BPP 4
+#endif
 
-extern int SHIFTON,pauseg,SND ,snd_sampler;
-extern short signed int SNDBUF[1024*2];
+extern int SND;
 extern char RPATH[512];
 extern char RETRO_DIR[512];
 
@@ -21,24 +22,16 @@ SDL_Surface *sdlscrn;
 
 void SDL_Uninit(void)
 {
-   printf("free gVar.pScreen\n");
-
-printf("free surf format palette color\n");
-
    if(sdlscrn->format->palette->colors)	
       free(sdlscrn->format->palette->colors);
 
-printf("free surf format palette \n");
    if(sdlscrn->format->palette)	
       free(sdlscrn->format->palette);
-printf("free surf format  \n");
    if(sdlscrn->format)	
       free(sdlscrn->format);
 
-printf("free surf pixel  \n"); 
-   if(sdlscrn->pixels)sdlscrn->pixels=NULL;
-   
-printf("free surf  \n"); 
+   if(sdlscrn->pixels)
+      sdlscrn->pixels=NULL;
 
    if(sdlscrn)	
       free(sdlscrn);
@@ -50,15 +43,11 @@ const char *retro_content_directory;
 
 #include "cmdline.c"
 
-extern void update_input(void);
 extern void texture_init(void);
 extern void texture_uninit(void);
-extern void Emu_init();
-extern void Emu_uninit();
-extern void input_gui(void);
 
 static retro_video_refresh_t video_cb;
-/*static*/ retro_audio_sample_t audio_cb;
+retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 static retro_environment_t environ_cb;
 
@@ -67,10 +56,6 @@ void retro_set_environment(retro_environment_t cb)
    environ_cb = cb;
 
    struct retro_variable variables[] = {
-      {
-         "Skel_resolution",
-	 "Internal resolution; 640x480|832x576|800x600|960x720|1024x768|1024x1024",
-      },
       { NULL, NULL },
    };
 
@@ -82,135 +67,50 @@ void retro_set_environment(retro_environment_t cb)
 
 static void update_variables(void)
 {
-   struct retro_variable var = {
-      .key = "Skel_resolution",
-   };
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   {
-      char *pch;
-      char str[100];
-      snprintf(str, sizeof(str), var.value);
-
-      pch = strtok(str, "x");
-      if (pch)
-         retrow = strtoul(pch, NULL, 0);
-      pch = strtok(NULL, "x");
-      if (pch)
-         retroh = strtoul(pch, NULL, 0);
-
-retrow=WINDOW_WIDTH;
-retroh=WINDOW_HEIGHT;
-
-      fprintf(stderr, "[libretro-test]: Got size: %u x %u.\n", retrow, retroh);
-
-      CROP_WIDTH =retrow;
-      CROP_HEIGHT= (retroh-80);
-      VIRTUAL_WIDTH = retrow;
-      texture_init();
-   }
-
 }
 
-static void retro_wrap_emulator()
+static void retro_wrap_emulator(void)
 {    
-   SND=1;
-   sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0",retro_system_directory);
-   pre_main(RPATH);
-
-   pauseg=-1;
-
-   environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, 0); 
-
-   // Were done here
-   co_switch(mainThread);
-
-   // Dead emulator, but libco says not to return
-   while(true)
-   {
-      LOGI("Running a dead emulator.");
-      co_switch(mainThread);
-   }
 }
 
-void Emu_init(){
-
-#ifdef RETRO_AND
-   MOUSEMODE=1;
-#endif
-
-   update_variables();
-
-   memset(Key_Sate,0,512);
-   memset(Key_Sate2,0,512);
-
-   if(!emuThread && !mainThread)
-   {
-      mainThread = co_active();
-      emuThread = co_create(65536*sizeof(void*), retro_wrap_emulator);
-   }
-
-}
-
-void Emu_uninit(){
-   texture_uninit();
-}
-
-void retro_shutdown_core(void)
+void retro_reset(void)
 {
-   printf("SHUTDOWN\n");
-   texture_uninit();
-   environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
-}
-
-void retro_reset(void){
-
 }
 
 void retro_init(void)
 {    	
-   const char *system_dir = NULL;
-
-   if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_dir) && system_dir)
-   {
-      // if defined, use the system directory			
-      retro_system_directory=system_dir;		
-   }		   
-
+   const char *system_dir  = NULL;
    const char *content_dir = NULL;
+   const char *save_dir    = NULL;
 
+   // if defined, use the system directory			
+   if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &system_dir) && system_dir)
+      retro_system_directory=system_dir;		
+
+   // if defined, use the system directory			
    if (environ_cb(RETRO_ENVIRONMENT_GET_CONTENT_DIRECTORY, &content_dir) && content_dir)
-   {
-      // if defined, use the system directory			
       retro_content_directory=content_dir;		
-   }			
 
-   const char *save_dir = NULL;
-
+   // If save directory is defined use it, otherwise use system directory
    if (environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_dir) && save_dir)
-   {
-      // If save directory is defined use it, otherwise use system directory
       retro_save_directory = *save_dir ? save_dir : retro_system_directory;      
-   }
    else
-   {
       // make retro_save_directory the same in case RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY is not implemented by the frontend
       retro_save_directory=retro_system_directory;
-   }
 
-   if(retro_system_directory==NULL)sprintf(RETRO_DIR, "%s\0",".");
-   else sprintf(RETRO_DIR, "%s\0", retro_system_directory);
+   if(retro_system_directory==NULL)
+      sprintf(RETRO_DIR, "%s\0",".");
+   else
+      sprintf(RETRO_DIR, "%s\0", retro_system_directory);
 
    printf("Retro SYSTEM_DIRECTORY %s\n",retro_system_directory);
    printf("Retro SAVE_DIRECTORY %s\n",retro_save_directory);
    printf("Retro CONTENT_DIRECTORY %s\n",retro_content_directory);
 
-#ifndef RENDER16B
-    	enum retro_pixel_format fmt =RETRO_PIXEL_FORMAT_XRGB8888;
-retrob=4;
+#ifdef FRONTEND_SUPPORTS_RGB565
+   enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
 #else
-    	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
-retrob=2;
+   enum retro_pixel_format fmt =RETRO_PIXEL_FORMAT_XRGB8888;
 #endif
    
    if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
@@ -219,21 +119,15 @@ retrob=2;
       exit(0);
    }
 
-   Emu_init();
+   memset(Key_Sate,0,512);
+   memset(Key_Sate2,0,512);
+
    texture_init();
 }
 
 void retro_deinit(void)
 {	 
-   Emu_uninit(); 
-
-   if(emuThread)
-   {	 
-      co_delete(emuThread);
-      emuThread = 0;
-   }
-
-   LOGI("Retro DeInit\n");
+   texture_uninit();
 }
 
 unsigned retro_api_version(void)
@@ -282,83 +176,54 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
    video_cb = cb;
 }
 
+extern int Retro_PollEvent(void);
+extern void syssnd_callback(U8 *stream, int len);
+
 void retro_run(void)
 {
-   int x;
-
    bool updated = false;
 
    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       update_variables();
 
-   if(pauseg==0){
+   Retro_PollEvent();
 
-      Retro_PollEvent();
+   game_iterate();
 
-      if(SND==1){
-		syssnd_callback(NULL,441*2);			
-      }	
-
-   }   
-
-
-   if(sdlscrn/*->pixels*/!=NULL){
-	
-	video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
-   }
-
-   co_switch(emuThread);
-
+   if(sdlscrn)
+      video_cb(sdlscrn->pixels,retrow,retroh, retrow<< PIXEL_BYTES);
 }
-#if 0
-unsigned int lastdown,lastup,lastchar;
-static void keyboard_cb(bool down, unsigned keycode,
-      uint32_t character, uint16_t mod)
-{
-   //logging.log(RETRO_LOG_INFO, "Down: %s, Code: %d, Char: %u, Mod: %u.\n",
-     //    down ? "yes" : "no", keycode, character, mod);
-
-/*
-if(down)lastdown=keycode;
-else lastup=keycode;
-lastchar=character;
-*/
-}
-#endif
 
 bool retro_load_game(const struct retro_game_info *info)
 {
-   const char *full_path;
-
-   (void)info;
-/*
-   struct retro_keyboard_callback cb = { keyboard_cb };
-   environ_cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, &cb);
-*/
-   full_path = info->path;
-
-   //strcpy(RPATH,full_path);
-
    update_variables();
 
-#ifdef RENDER16B
-	memset(Retro_Screen,0,1600*1200*2);
-	//sdlscrn =NULL;	
- SDL_SetVideoMode(/*retrow,retroh*/WINDOW_WIDTH,WINDOW_HEIGHT, 16, 0);
-retrob=2;
+#ifdef FRONTEND_SUPPORTS_RGB565
+   memset(Retro_Screen,0,WINDOW_WIDTH*WINDOW_HEIGHT*2);
+   SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT, 16, 0);
 #else
-	memset(Retro_Screen,0,1600*1200*2*2);
-	//sdlscrn=NULL;
-	sdlscrn = SDL_SetVideoMode(/*retrow,retroh,*/WINDOW_WIDTH,WINDOW_HEIGHT ,32, 0);
-retrob=4;
+   memset(Retro_Screen,0,WINDOW_WIDTH*WINDOW_HEIGHT*2*2);
+   sdlscrn = SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT ,32, 0);
 #endif
+
+   SND=1;
+   if (info)
+      sprintf(RPATH,"\"xrick\" \"-data\" \"%s\"\0", info->path);
+   else
+      sprintf(RPATH,"\"xrick\" \"-data\" \"%s/data.zip\"\0", retro_system_directory);
+   pre_main(RPATH);
+	game_run();
 
    return true;
 }
 
-void retro_unload_game(void){
+void freedata(void);
 
-   pauseg=0;
+void retro_unload_game(void)
+{
+	freedata(); /* free cached data */
+	data_closepath();
+	sys_shutdown();
 }
 
 unsigned retro_get_region(void)

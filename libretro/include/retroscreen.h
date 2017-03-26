@@ -1,11 +1,8 @@
 #ifndef RETROSCREEN_H
-#define RETROSCREEN_H 1
+#define RETROSCREEN_H
 
-extern int CROP_WIDTH;
-extern int CROP_HEIGHT;
 extern int VIRTUAL_WIDTH;
 extern int retrow ; 
 extern int retroh ;
-extern int retrob ;
 
 #endif

@@ -27,9 +27,6 @@ skel_main(int argc, char *argv[])
 		data_setpath(sysarg_args_data);
 	else
 		data_setpath("data.zip");
-	game_run();
-	data_closepath();
-	sys_shutdown();
 	return 0;
 }
 

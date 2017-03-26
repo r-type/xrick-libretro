@@ -15,15 +15,7 @@ static __inline__ unsigned SDL_Swap32(unsigned x){
 //#define SDL_SwapLE16(X) SDL_Swap16(X)
 //#define SDL_SwapLE32(X) SDL_Swap32(X)
 
-#ifdef LSB_FIRST
-
-#define SDL_SwapLE16(X)	(X)
-#define SDL_SwapLE32(X) (X)
-
-#define SDL_SwapBE16(X) SDL_Swap16(X)
-#define SDL_SwapBE32(X) SDL_Swap32(X)
-
-#else
+#ifdef MSB_FIRST
 
 #define SDL_SwapLE16(X)	SDL_Swap16(X)
 #define SDL_SwapLE32(X) SDL_Swap32(X)
@@ -31,15 +23,23 @@ static __inline__ unsigned SDL_Swap32(unsigned x){
 #define SDL_SwapBE16(X) (X)
 #define SDL_SwapBE32(X) (X)
 
+#else
+
+#define SDL_SwapLE16(X)	(X)
+#define SDL_SwapLE32(X) (X)
+
+#define SDL_SwapBE16(X) SDL_Swap16(X)
+#define SDL_SwapBE32(X) SDL_Swap32(X)
+
 #endif
 
 #define SDL_LIL_ENDIAN	1234
 #define SDL_BIG_ENDIAN	4321
 
-#ifdef LSB_FIRST
-#define SDL_BYTEORDER SDL_LIL_ENDIAN         
-#else    
+#ifdef MSB_FIRST
 #define SDL_BYTEORDER SDL_BIG_ENDIAN
+#else    
+#define SDL_BYTEORDER SDL_LIL_ENDIAN         
 #endif
 
 

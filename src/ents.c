@@ -493,26 +493,28 @@ ent_action(void)
 {
   U8 i, k;
 
-  IFDEBUG_ENTS(
-    sys_printf("xrick/ents: --------- action ----------------\n");
-    for (i = 0; ent_ents[i].n != 0xff; i++)
-      if (ent_ents[i].n) {
-	sys_printf("xrick/ents: slot %#04x, entity %#04x", i, ent_ents[i].n);
-	sys_printf(" (%#06x, %#06x), sprite %#04x.\n",
-		   ent_ents[i].x, ent_ents[i].y, ent_ents[i].sprite);
-      }
-    );
+  for (i = 0; ent_ents[i].n != 0xff; i++)
+  {
+     if (ent_ents[i].n)
+     {
+        sys_printf("xrick/ents: slot %#04x, entity %#04x", i, ent_ents[i].n);
+        sys_printf(" (%#06x, %#06x), sprite %#04x.\n",
+              ent_ents[i].x, ent_ents[i].y, ent_ents[i].sprite);
+     }
+  }
 
-  for (i = 0; ent_ents[i].n != 0xff; i++) {
-    if (ent_ents[i].n) {
-      k = ent_ents[i].n & 0x7f;
-      if (k == 0x47)
-	e_them_z_action(i);
-      else if (k >= 0x18)
-        e_them_t3_action(i);
-      else
-	ent_actf[k](i);
-    }
+  for (i = 0; ent_ents[i].n != 0xff; i++)
+  {
+     if (ent_ents[i].n)
+     {
+        k = ent_ents[i].n & 0x7f;
+        if (k == 0x47)
+           e_them_z_action(i);
+        else if (k >= 0x18)
+           e_them_t3_action(i);
+        else
+           ent_actf[k](i);
+     }
   }
 }
 

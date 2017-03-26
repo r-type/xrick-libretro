@@ -27,16 +27,10 @@
 /* joystick support */
 #undef ENABLE_JOYSTICK
 
-/* sound support */
-#define ENABLE_SOUND
-
 /* cheats support */
 #define ENABLE_CHEATS
-
-/* auto-defocus support */
-/* does seem to cause all sorts of problems on BeOS, Windows... */
-#undef ENABLE_FOCUS
 #endif
+
 /* development tools */
 #undef ENABLE_DEVTOOLS
 #undef DEBUG /* see include/debug.h */

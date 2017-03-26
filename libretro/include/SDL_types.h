@@ -32,10 +32,10 @@ static char rcsid =
 
 //RETRO HACK
 
-#ifdef LSB_FIRST
-#define SDL_BYTEORDER SDL_LIL_ENDIAN         
-#else    
+#ifdef MSB_FIRST
 #define SDL_BYTEORDER SDL_BIG_ENDIAN
+#else    
+#define SDL_BYTEORDER SDL_LIL_ENDIAN         
 #endif
 
 

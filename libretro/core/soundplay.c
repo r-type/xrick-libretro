@@ -1,13 +1,14 @@
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "system.h"
 #include "game.h"
 #include "syssnd.h"
 #include "debug.h"
 #include "data.h"
 
-#include <stdint.h>
-
 #define SDL_MIX_MAXVOLUME 128
-
 
 #define ADJVOL(S) (((S)*sndVol)/SDL_MIX_MAXVOLUME)
 
@@ -31,51 +32,63 @@ extern  retro_audio_sample_t audio_cb;
  */
 void syssnd_callback(U8 *stream, int len)
 {
-  U8 c;
-  S16 s;
-  U32 i;
+   U8 c;
+   S16 s;
+   U32 i;
 
-  for (i = 0; i < (U32)len; i++) {
-    s = 0;
-    for (c = 0; c < SYSSND_MIXCHANNELS; c++) {
-      if (channel[c].loop != 0) {  /* channel is active */
-	if (channel[c].len > 0) {  /* not ending */
-	  s += ADJVOL(*channel[c].buf - 0x80);
-	  channel[c].buf++;
-	  channel[c].len--;
-	}
-	else {  /* ending */
-	  if (channel[c].loop > 0) channel[c].loop--;
-	  if (channel[c].loop) {  /* just loop */
-	    IFDEBUG_AUDIO2(sys_printf("xrick/audio: channel %d - loop\n", c););
-	    channel[c].buf = channel[c].snd->buf;
-	    channel[c].len = channel[c].snd->len;
-	    s += ADJVOL(*channel[c].buf - 0x80);
-	    channel[c].buf++;
-	    channel[c].len--;
-	  }
-	  else {  /* end for real */
-	    IFDEBUG_AUDIO2(sys_printf("xrick/audio: channel %d - end\n", c););
-	    end_channel(c);
-	  }
-	}
+   for (i = 0; i < (U32)len; i++)
+   {
+      s = 0;
+      for (c = 0; c < SYSSND_MIXCHANNELS; c++)
+      {
+         if (channel[c].loop != 0)
+         {  /* channel is active */
+            if (channel[c].len > 0)
+            {  /* not ending */
+               s += ADJVOL(*channel[c].buf - 0x80);
+               channel[c].buf++;
+               channel[c].len--;
+            }
+            else
+            {  /* ending */
+               if (channel[c].loop > 0)
+                  channel[c].loop--;
+
+               if (channel[c].loop)
+               {  /* just loop */
+                  channel[c].buf = channel[c].snd->buf;
+                  channel[c].len = channel[c].snd->len;
+                  s += ADJVOL(*channel[c].buf - 0x80);
+                  channel[c].buf++;
+                  channel[c].len--;
+               }
+               else
+               {  /* end for real */
+                  end_channel(c);
+               }
+            }
+         }
       }
-    }
-    if (sndMute){
-      //stream[i] = 0x80;
-      audio_cb(0,0);
-    }
-    else {
-/*
-      s += 0x80;
-      if (s > 0xff) s = 0xff;
-      if (s < 0x00) s = 0x00;
-      //stream[i] = (U8)s;
-*/
-      s=s<<8 |s;
+
+      if (sndMute)
+      {
+         //stream[i] = 0x80;
+         s = 0;
+      }
+      else
+      {
+#if 0
+         s += 0x80;
+         if (s > 0xff)
+            s = 0xff;
+         if (s < 0x00)
+            s = 0x00;
+         //stream[i] = (U8)s;
+#endif
+         s=s<<8 |s;
+      }
       audio_cb(s,s);
-    }
-  }
+   }
 
 }
 
@@ -90,20 +103,20 @@ end_channel(U8 c)
 }
 
 
-void
-syssnd_init(void)
+void syssnd_init(void)
 {
- U8 c;
+   U8 c;
 
-  if (sysarg_args_vol != 0) {
-    sndUVol = sysarg_args_vol;
-    sndVol = SDL_MIX_MAXVOLUME * sndUVol / SYSSND_MAXVOL;
-  }
+   if (sysarg_args_vol != 0)
+   {
+      sndUVol = sysarg_args_vol;
+      sndVol = SDL_MIX_MAXVOLUME * sndUVol / SYSSND_MAXVOL;
+   }
 
-  for (c = 0; c < SYSSND_MIXCHANNELS; c++)
-    channel[c].loop = 0;  /* deactivate */
+   for (c = 0; c < SYSSND_MIXCHANNELS; c++)
+      channel[c].loop = 0;  /* deactivate */
 
-	isAudioActive = TRUE;
+   isAudioActive = TRUE;
 
 }
 
@@ -111,11 +124,11 @@ syssnd_init(void)
 /*
  * Shutdown
  */
-void
-syssnd_shutdown(void)
+void syssnd_shutdown(void)
 {
-  if (!isAudioActive) return;
-  isAudioActive = FALSE;
+   if (!isAudioActive)
+      return;
+   isAudioActive = FALSE;
 }
 
 
@@ -125,20 +138,19 @@ syssnd_shutdown(void)
  * When muted, sounds are still managed but not sent to the dsp, hence
  * it is possible to un-mute at any time.
  */
-void
-syssnd_toggleMute(void)
+void syssnd_toggleMute(void)
 {
-  sndMute = !sndMute;
+   sndMute = !sndMute;
 }
 
-void
-syssnd_vol(S8 d)
+void syssnd_vol(S8 d)
 {
-  if ((d < 0 && sndUVol > 0) ||
-      (d > 0 && sndUVol < SYSSND_MAXVOL)) {
-    sndUVol += d;
-    sndVol = SDL_MIX_MAXVOLUME * sndUVol / SYSSND_MAXVOL;
-  }
+   if ((d < 0 && sndUVol > 0) ||
+         (d > 0 && sndUVol < SYSSND_MAXVOL))
+   {
+      sndUVol += d;
+      sndVol = SDL_MIX_MAXVOLUME * sndUVol / SYSSND_MAXVOL;
+   }
 }
 
 /*
@@ -151,38 +163,32 @@ syssnd_vol(S8 d)
  * twice the same sound playing -- tends to become noisy when too many
  * bad guys die at the same time).
  */
-S8
-syssnd_play(sound_t *sound, S8 loop)
+S8 syssnd_play(sound_t *sound, S8 loop)
 {
-  S8 c;
+   S8 c;
 
-  if (!isAudioActive) return -1;
-  if (sound == NULL) return -1;
+   if (!isAudioActive)
+      return -1;
+   if (sound == NULL)
+      return -1;
 
-  c = 0;
-  while ((channel[c].snd != sound || channel[c].loop == 0) &&
-	 channel[c].loop != 0 &&
-	 c < SYSSND_MIXCHANNELS)
-    c++;
-  if (c == SYSSND_MIXCHANNELS)
-    c = -1;
+   c = 0;
+   while ((channel[c].snd != sound || channel[c].loop == 0) &&
+         channel[c].loop != 0 &&
+         c < SYSSND_MIXCHANNELS)
+      c++;
+   if (c == SYSSND_MIXCHANNELS)
+      c = -1;
 
-  IFDEBUG_AUDIO(
-    if (channel[c].snd == sound && channel[c].loop != 0)
-      sys_printf("xrick/sound: already playing %s on channel %d - resetting\n",
-		 sound->name, c);
-    else if (c >= 0)
-      sys_printf("xrick/sound: playing %s on channel %d\n", sound->name, c);
-    );
+   if (c >= 0)
+   {
+      channel[c].loop = loop;
+      channel[c].snd = sound;
+      channel[c].buf = sound->buf;
+      channel[c].len = sound->len;
+   }
 
-  if (c >= 0) {
-    channel[c].loop = loop;
-    channel[c].snd = sound;
-    channel[c].buf = sound->buf;
-    channel[c].len = sound->len;
-  }
-
-  return c;
+   return c;
 }
 
 /*
@@ -194,58 +200,59 @@ syssnd_play(sound_t *sound, S8 loop)
 void
 syssnd_pause(U8 pause, U8 clear)
 {
-  U8 c;
+   U8 c;
 
-  if (!isAudioActive) return;
+   if (!isAudioActive)
+      return;
 
-  if (clear == TRUE) {
-    for (c = 0; c < SYSSND_MIXCHANNELS; c++)
-      channel[c].loop = 0;
-  }
-
+   if (clear == TRUE)
+   {
+      for (c = 0; c < SYSSND_MIXCHANNELS; c++)
+         channel[c].loop = 0;
+   }
 }
 
 /*
  * Stop a channel
  */
-void
-syssnd_stopchan(S8 chan)
+void syssnd_stopchan(S8 chan)
 {
-  if (chan < 0 || chan > SYSSND_MIXCHANNELS)
-    return;
+   if (chan < 0 || chan > SYSSND_MIXCHANNELS)
+      return;
 
-  if (channel[chan].snd) end_channel(chan);
+   if (channel[chan].snd)
+      end_channel(chan);
 
 }
 
 /*
  * Stop a sound
  */
-void
-syssnd_stopsound(sound_t *sound)
+void syssnd_stopsound(sound_t *sound)
 {
-	U8 i;
+   U8 i;
 
-	if (!sound) return;
+   if (!sound)
+      return;
 
-	for (i = 0; i < SYSSND_MIXCHANNELS; i++)
-		if (channel[i].snd == sound) end_channel(i);
+   for (i = 0; i < SYSSND_MIXCHANNELS; i++)
+      if (channel[i].snd == sound) end_channel(i);
 
 }
 
 /*
  * See if a sound is playing
  */
-int
-syssnd_isplaying(sound_t *sound)
+int syssnd_isplaying(sound_t *sound)
 {
-	U8 i, playing;
+   U8 i, playing;
 
-	playing = 0;
-	for (i = 0; i < SYSSND_MIXCHANNELS; i++)
-		if (channel[i].snd == sound) playing = 1;
+   playing = 0;
+   for (i = 0; i < SYSSND_MIXCHANNELS; i++)
+      if (channel[i].snd == sound)
+         playing = 1;
 
-	return playing;
+   return playing;
 }
 
 
@@ -258,7 +265,8 @@ syssnd_stopall(void)
 	U8 i;
 
 	for (i = 0; i < SYSSND_MIXCHANNELS; i++)
-		if (channel[i].snd) end_channel(i);
+		if (channel[i].snd)
+         end_channel(i);
 }
 
 
@@ -286,43 +294,34 @@ typedef struct
 /*
  * Load a sound.
  */
-sound_t *
-syssnd_load(char *name)
+sound_t *syssnd_load(char *name)
 {
-	sound_t *s;
+   wavhead_t head;
+   sound_t *s     = malloc(sizeof(sound_t));
+   data_file_t *f = data_file_open(name);
 
-	printf("load snd:%s \n",name);
-	wavhead_t head;
+   data_file_read(f, &head, 1, WAV_HEADER_SIZE);
 
-	/* alloc sound */
-	s = malloc(sizeof(sound_t));
+   s->buf=malloc(head.Subchunk2Size);
+   s->len=head.Subchunk2Size;
 
-	data_file_t *f;
+   data_file_read(f, s->buf, 1, s->len);
+   s->dispose = FALSE;
 
-	f = data_file_open(name);
+   data_file_close(f);
 
-	data_file_read(f, &head, 1, WAV_HEADER_SIZE);
-	s->buf=malloc(head.Subchunk2Size);
-	s->len=head.Subchunk2Size;
-
-	data_file_read(f, s->buf, 1, s->len);
-	printf("sz snd:%d \n",s->len+WAV_HEADER_SIZE);
-	s->dispose = FALSE;
-
-	data_file_close(f);
-
-
-	return s;
+   return s;
 }
 
 /*
  *
  */
-void
-syssnd_free(sound_t *s)
+void syssnd_free(sound_t *s)
 {
-	if (!s) return;
-	if (s->buf) free(s->buf);
+	if (!s)
+      return;
+	if (s->buf)
+      free(s->buf);
 	s->buf = NULL;
 	s->len = 0;
 }

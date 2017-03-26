@@ -1,0 +1,61 @@
+DEPS_DIR   := $(CORE_DIR)/deps
+
+INCFLAGS   := -I$(CORE_DIR)/include -I$(CORE_DIR)/include/compat -I$(CORE_DIR)/src -I$(CORE_DIR)/libretro -I$(CORE_DIR)/libretro/sdl_wrapp -I$(CORE_DIR)/libretro/include
+
+SOURCES_C := \
+	$(CORE_DIR)/src/unzip.c \
+	$(CORE_DIR)/src/data.c \
+	$(CORE_DIR)/src/scr_xrick.c \
+	$(CORE_DIR)/src/scr_pause.c \
+	$(CORE_DIR)/src/scr_imain.c \
+	$(CORE_DIR)/src/scr_imap.c \
+	$(CORE_DIR)/src/scr_gameover.c \
+	$(CORE_DIR)/src/scr_getname.c \
+	$(CORE_DIR)/src/dat_picsPC.c \
+	$(CORE_DIR)/src/dat_picsST.c \
+	$(CORE_DIR)/src/dat_screens.c \
+	$(CORE_DIR)/src/dat_tilesPC.c \
+	$(CORE_DIR)/src/dat_tilesST.c \
+	$(CORE_DIR)/src/dat_maps.c \
+	$(CORE_DIR)/src/dat_ents.c \
+	$(CORE_DIR)/src/dat_spritesST.c \
+	$(CORE_DIR)/src/dat_spritesPC.c \
+	$(CORE_DIR)/src/ents.c \
+	$(CORE_DIR)/src/e_bullet.c \
+	$(CORE_DIR)/src/e_bomb.c \
+	$(CORE_DIR)/src/e_rick.c \
+	$(CORE_DIR)/src/e_sbonus.c \
+	$(CORE_DIR)/src/e_them.c \
+	$(CORE_DIR)/src/e_bonus.c \
+	$(CORE_DIR)/src/e_box.c \
+	$(CORE_DIR)/src/rects.c \
+	$(CORE_DIR)/src/util.c \
+	$(CORE_DIR)/src/game.c \
+	$(CORE_DIR)/src/xrick.c \
+	$(CORE_DIR)/src/draw.c \
+	$(CORE_DIR)/src/maps.c \
+	$(CORE_DIR)/src/sysvid.c \
+	$(CORE_DIR)/src/syskbd.c \
+	$(CORE_DIR)/src/control.c \
+	$(CORE_DIR)/src/system.c \
+	$(CORE_DIR)/src/scroller.c \
+	$(CORE_DIR)/src/sysevt.c \
+	$(CORE_DIR)/src/sysarg.c \
+	$(CORE_DIR)/src/sysjoy.c \
+	$(CORE_DIR)/src/dat_snd.c \
+	$(CORE_DIR)/libretro/core/soundplay.c \
+	$(CORE_DIR)/libretro/sdl_wrapp/sdl_primitives.c \
+	$(CORE_DIR)/libretro/sdl_wrapp/bmp.c \
+	$(CORE_DIR)/libretro/core/libretro-core.c \
+	$(CORE_DIR)/libretro/core/core-mapper.c
+
+ifeq ($(STATIC_LINKING),1)
+else
+SOURCES_C += \
+	$(DEPS_DIR)/libz/adler32.c \
+	$(DEPS_DIR)/libz/crc32.c \
+	$(DEPS_DIR)/libz/inflate.c \
+	$(DEPS_DIR)/libz/inftrees.c \
+	$(DEPS_DIR)/libz/inffast.c \
+	$(DEPS_DIR)/libz/zutil.c
+endif

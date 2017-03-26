@@ -148,12 +148,6 @@ map_chain(void)
   c = map_submaps[game_submap].connect;
   t = 3;
 
-  IFDEBUG_MAPS(
-    sys_printf("xrick/maps: chain submap=%#04x frow=%#04x .connect=%#04x %s\n",
-	       game_submap, map_frow, c,
-	       (game_dir == LEFT ? "-> left" : "-> right"));
-  );
-
   /*
    * look for the first connector with compatible row number. if none
    * found, then panic
@@ -166,35 +160,14 @@ map_chain(void)
     if (t < 3) break;
   }
 
-  /* got it */
-  IFDEBUG_MAPS(
-    sys_printf("xrick/maps: chain frow=%#04x y=%#06x\n",
-	       map_frow, ent_ents[1].y);
-    sys_printf("xrick/maps: chain connect=%#04x rowout=%#04x - ",
-	       c, map_connect[c].rowout);
-    );
+  /* no next submap - request next map */
+  if (map_connect[c].submap == 0xff)
+     return FALSE;
 
-  if (map_connect[c].submap == 0xff) {
-    /* no next submap - request next map */
-    IFDEBUG_MAPS(
-      sys_printf("chain to next map\n");
-      );
-    return FALSE;
-  }
-  else  {
-    /* next submap */
-    IFDEBUG_MAPS(
-      sys_printf("chain to submap=%#04x rowin=%#04x\n",
-		 map_connect[c].submap, map_connect[c].rowin);
-      );
-    map_frow = map_frow - map_connect[c].rowout + map_connect[c].rowin;
-    game_submap = map_connect[c].submap;
-    IFDEBUG_MAPS(
-      sys_printf("xrick/maps: chain frow=%#04x\n",
-		 map_frow);
-      );
-    return TRUE;
-  }
+  /* next submap */
+  map_frow = map_frow - map_connect[c].rowout + map_connect[c].rowin;
+  game_submap = map_connect[c].submap;
+  return TRUE;
 }
 
 
